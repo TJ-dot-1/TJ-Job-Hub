@@ -15,6 +15,13 @@
       "dest": "/api/$1"
     },
     {
+      "src": "/(.*\\.(jpg|jpeg|png|gif|ico|svg|css|js|json|xml|txt|pdf))$",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "dest": "/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
