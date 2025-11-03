@@ -9,6 +9,10 @@ import { Server as SocketIO } from 'socket.io';
 import passport from 'passport';
 import session from 'express-session';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Load environment variables
 dotenv.config();
@@ -21,35 +25,6 @@ const io = new SocketIO(server, {
     methods: ["GET", "POST"]
   }
 });
-
-// Handle root route
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Job Hub API Server is running!',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
-    endpoints: {
-      health: '/api/health',
-      auth: '/api/auth',
-      jobs: '/api/jobs',
-      companies: '/api/companies',
-      applications: '/api/applications',
-      employer: '/api/employer',
-      chat: '/api/chat',
-      websocket: '/socket.io/*'
-    }
-  });
-});
-
-// Handle favicon requests
-app.get('/favicon.ico', (req, res) => {
-  res.status(204).end();
-});
-
-app.get('/favicon.png', (req, res) => {
-  res.status(204).end();
-});
-
 
 // Security Middleware
 app.use(helmet({
@@ -132,6 +107,11 @@ passport.deserializeUser(async (id, done) => {
 // Static Files
 app.use('/uploads', express.static('uploads'));
 
+// Serve favicon.ico from frontend dist
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/favicon.ico'));
+});
+
 // Database Connection
 const connectDB = async () => {
   try {
@@ -213,9 +193,8 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Demo jobs endpoint (this might conflict with your jobs routes)
-// Consider removing this if you have proper jobs routes
-app.get('/api/demo-jobs', async (req, res) => {
+// Demo jobs endpoint
+app.get('/api/jobs', async (req, res) => {
   // Demo jobs data
   const jobs = [
     {
@@ -277,6 +256,35 @@ app.get('/api/demo-jobs', async (req, res) => {
         views: 200,
         applications: 35
       }
+    },
+    {
+      _id: '3',
+      title: 'Product Manager',
+      company: {
+        name: 'Innovate Inc',
+        logo: ''
+      },
+      location: 'San Francisco, CA',
+      jobType: 'full-time',
+      salary: {
+        min: 100000,
+        max: 150000,
+        currency: 'USD',
+        period: 'yearly'
+      },
+      description: 'Lead product development from conception to launch. Work with cross-functional teams to deliver exceptional user experiences.',
+      requirements: {
+        skills: [
+          { name: 'Product Management', required: true },
+          { name: 'Agile', required: true },
+          { name: 'User Research', required: true }
+        ]
+      },
+      postedAt: new Date(),
+      metadata: {
+        views: 180,
+        applications: 42
+      }
     }
   ];
 
@@ -298,63 +306,47 @@ app.use((error, req, res, next) => {
   });
 });
 
-// 404 handler for API routes
-app.use('/api/*', (req, res) => {
+// 404 handler
+app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
     message: 'API endpoint not found'
   });
 });
 
-// Catch-all handler for non-API routes
-app.use('*', (req, res) => {
-  res.json({
-    message: 'Job Hub API Server',
-    timestamp: new Date().toISOString(),
-    documentation: 'Use /api endpoints for API access'
-  });
-});
-
-// Vercel-specific: Export the app for serverless functions
-const PORT = process.env.PORT || 5000;
-
-// Only start the server if not in Vercel environment
-if (process.env.VERCEL !== '1') {
-  const startServer = async (retries = 3) => {
-    try {
-      await new Promise((resolve, reject) => {
-        server.listen(PORT, () => {
-          console.log(`🚀 Server running on port ${PORT}`);
-          console.log(`📊 Environment: ${process.env.NODE_ENV}`);
-          console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
-          console.log(`🔐 Auth endpoints: http://localhost:${PORT}/api/auth`);
-          console.log(`💼 Employer endpoints: http://localhost:${PORT}/api/employer`);
-          console.log(`💬 Chat endpoints: http://localhost:${PORT}/api/chat`);
-          console.log(`📝 Application endpoints: http://localhost:${PORT}/api/applications`);
-          resolve();
-        }).on('error', (err) => {
-          if (err.code === 'EADDRINUSE') {
-            reject(new Error(`Port ${PORT} is already in use`));
-          } else {
-            reject(err);
-          }
-        });
+const startServer = async (retries = 3) => {
+  const PORT = process.env.PORT || 5000;
+  
+  try {
+    await new Promise((resolve, reject) => {
+      server.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+        console.log(`📊 Environment: ${process.env.NODE_ENV}`);
+        console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+        console.log(`🔐 Auth endpoints: http://localhost:${PORT}/api/auth`);
+        console.log(`💼 Employer endpoints: http://localhost:${PORT}/api/employer`);
+        console.log(`💬 Chat endpoints: http://localhost:${PORT}/api/chat`);
+        console.log(`📝 Application endpoints: http://localhost:${PORT}/api/applications`);
+        resolve();
+      }).on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+          reject(new Error(`Port ${PORT} is already in use`));
+        } else {
+          reject(err);
+        }
       });
-    } catch (error) {
-      if (retries > 0 && error.message.includes('already in use')) {
-        const nextPort = parseInt(PORT) + 1;
-        console.log(`Port ${PORT} is busy, trying port ${nextPort}...`);
-        process.env.PORT = nextPort.toString();
-        await startServer(retries - 1);
-      } else {
-        console.error('Failed to start server:', error.message);
-        process.exit(1);
-      }
+    });
+  } catch (error) {
+    if (retries > 0 && error.message.includes('already in use')) {
+      const nextPort = parseInt(PORT) + 1;
+      console.log(`Port ${PORT} is busy, trying port ${nextPort}...`);
+      process.env.PORT = nextPort.toString();
+      await startServer(retries - 1);
+    } else {
+      console.error('Failed to start server:', error.message);
+      process.exit(1);
     }
-  };
+  }
+};
 
-  startServer();
-}
-
-// Export for Vercel
-export default app;
+startServer();
