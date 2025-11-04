@@ -235,11 +235,8 @@ app.use('/api/*', (req, res) => {
 
 // ==================== VERCEL COMPATIBLE EXPORT ====================
 
-// For Vercel deployment, we need to export a function that returns the app
-// This ensures proper handling of serverless functions
-export default function handler(req, res) {
-  return app(req, res);
-}
+// Export the app for Vercel serverless functions
+export default app;
 
 // For local development only
 if (process.env.VERCEL !== '1') {
