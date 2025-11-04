@@ -110,8 +110,16 @@ passport.deserializeUser(async (id, done) => {
 // Static Files
 app.use('/uploads', express.static('uploads'));
 
-// Serve static assets
-app.use(express.static(__dirname));
+// Serve static assets with proper MIME types
+app.use('/assets', express.static(path.join(__dirname, 'assets'), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    } else if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+  }
+}));
 
 // Serve favicon.ico from current directory
 app.get('/favicon.ico', (req, res) => {
