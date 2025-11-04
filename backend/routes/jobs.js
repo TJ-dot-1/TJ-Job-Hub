@@ -392,14 +392,104 @@ router.get('/recommended', verifyToken, requireRole(['job_seeker']), async (req,
   }
 });
 
+// POST /api/jobs/:id/save - Save a job for user
+router.post('/:id/save', verifyToken, requireRole(['job_seeker']), async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const userId = req.userId;
+
+    // Check if job exists
+    const Job = (await import('../models/Job.js')).default;
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({
+        success: false,
+        message: 'Job not found'
+      });
+    }
+
+    // Check if already saved
+    const SavedJob = (await import('../models/SavedJob.js')).default;
+    const existingSave = await SavedJob.findOne({ userId, jobId });
+
+    if (existingSave) {
+      return res.status(400).json({
+        success: false,
+        message: 'Job already saved'
+      });
+    }
+
+    // Save the job
+    const savedJob = new SavedJob({ userId, jobId });
+    await savedJob.save();
+
+    res.json({
+      success: true,
+      message: 'Job saved successfully'
+    });
+  } catch (error) {
+    console.error('Error saving job:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error saving job'
+    });
+  }
+});
+
+// DELETE /api/jobs/:id/save - Unsave a job for user
+router.delete('/:id/save', verifyToken, requireRole(['job_seeker']), async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const userId = req.userId;
+
+    const SavedJob = (await import('../models/SavedJob.js')).default;
+    const result = await SavedJob.findOneAndDelete({ userId, jobId });
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: 'Job not found in saved jobs'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Job unsaved successfully'
+    });
+  } catch (error) {
+    console.error('Error unsaving job:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error unsaving job'
+    });
+  }
+});
+
 // GET /api/jobs/saved - Get user's saved jobs
 router.get('/saved', verifyToken, requireRole(['job_seeker']), async (req, res) => {
   try {
-    // For now, return empty array as saved jobs functionality might be implemented later
-    // This would typically involve a separate SavedJob model or a field in User model
+    const SavedJob = (await import('../models/SavedJob.js')).default;
+    const Job = (await import('../models/Job.js')).default;
+
+    const savedJobs = await SavedJob.find({ userId: req.userId })
+      .populate({
+        path: 'jobId',
+        populate: {
+          path: 'company',
+          select: 'name company.logo company.name'
+        }
+      })
+      .sort({ savedAt: -1 });
+
+    // Filter out null jobId (in case jobs were deleted)
+    const validSavedJobs = savedJobs.filter(save => save.jobId).map(save => ({
+      ...save.jobId.toObject(),
+      savedAt: save.savedAt
+    }));
+
     res.json({
       success: true,
-      jobs: []
+      jobs: validSavedJobs
     });
   } catch (error) {
     console.error('Error fetching saved jobs:', error);
