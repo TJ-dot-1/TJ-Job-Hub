@@ -111,23 +111,31 @@ passport.deserializeUser(async (id, done) => {
 app.use('/uploads', express.static('uploads'));
 
 // Serve static assets with proper MIME types
-app.use('/assets', express.static(path.join(__dirname, 'assets'), {
-  setHeaders: (res, path) => {
-    if (path.endsWith('.css')) {
-      res.setHeader('Content-Type', 'text/css');
-    } else if (path.endsWith('.js')) {
-      res.setHeader('Content-Type', 'application/javascript');
-    } else if (path.endsWith('.png')) {
-      res.setHeader('Content-Type', 'image/png');
-    } else if (path.endsWith('.jpg') || path.endsWith('.jpeg')) {
-      res.setHeader('Content-Type', 'image/jpeg');
-    } else if (path.endsWith('.svg')) {
-      res.setHeader('Content-Type', 'image/svg+xml');
-    } else if (path.endsWith('.ico')) {
-      res.setHeader('Content-Type', 'image/x-icon');
-    }
+app.use('/assets', (req, res, next) => {
+  const filePath = path.join(__dirname, 'assets', req.path);
+  const ext = path.extname(req.path);
+
+  if (ext === '.css') {
+    res.setHeader('Content-Type', 'text/css');
+  } else if (ext === '.js') {
+    res.setHeader('Content-Type', 'application/javascript');
+  } else if (ext === '.png') {
+    res.setHeader('Content-Type', 'image/png');
+  } else if (ext === '.jpg' || ext === '.jpeg') {
+    res.setHeader('Content-Type', 'image/jpeg');
+  } else if (ext === '.svg') {
+    res.setHeader('Content-Type', 'image/svg+xml');
+  } else if (ext === '.ico') {
+    res.setHeader('Content-Type', 'image/x-icon');
   }
-}));
+
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error('Error serving asset:', req.path, err);
+      next();
+    }
+  });
+});
 
 // Serve favicon.ico from current directory
 app.get('/favicon.ico', (req, res) => {
@@ -328,7 +336,7 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Serve React app for non-API routes
+// Serve React app for non-API routes (must be last)
 app.get('*', (req, res) => {
   // Skip API routes
   if (req.path.startsWith('/api/') || req.path.startsWith('/socket.io/')) {
@@ -339,7 +347,12 @@ app.get('*', (req, res) => {
   }
 
   // Serve the React app's index.html for all other routes
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'), (err) => {
+    if (err) {
+      console.error('Error serving index.html:', err);
+      res.status(500).send('Internal Server Error');
+    }
+  });
 });
 
 const startServer = async (retries = 3) => {
