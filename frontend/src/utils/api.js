@@ -5,7 +5,7 @@ const api = axios.create({
   baseURL: import.meta.env.PROD
     ? 'https://tj-job-hub.onrender.com/api' // Production backend URL
     : '/api', // Use Vite's proxy in development
-  timeout: 10000,
+  timeout: 30000, // Increased timeout to 30 seconds for production
   headers: {
     'Content-Type': 'application/json',
   },
