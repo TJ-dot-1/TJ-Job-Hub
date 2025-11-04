@@ -2,7 +2,9 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
 const api = axios.create({
-  baseURL: '/api', // Use Vite's proxy
+  baseURL: import.meta.env.PROD
+    ? 'https://tj-job-hub.onrender.com/api' // Production backend URL
+    : '/api', // Use Vite's proxy in development
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

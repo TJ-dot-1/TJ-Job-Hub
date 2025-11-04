@@ -11,7 +11,10 @@ export const SocketProvider = ({ children }) => {
     // Connect to same origin. During development Vite proxy will forward
     // socket requests to the backend. In production set VITE_BACKEND_URL
     // to the backend origin if different.
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+    const backendUrl = import.meta.env.PROD
+      ? 'https://tj-job-hub.onrender.com' // Production backend URL
+      : (import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000');
+
     const socketInstance = io(backendUrl, {
       withCredentials: true,
       transports: ['websocket', 'polling']
