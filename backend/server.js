@@ -26,6 +26,9 @@ const io = new SocketIO(server, {
   }
 });
 
+// Trust proxy for rate limiting (important for Vercel deployment)
+app.set('trust proxy', 1);
+
 // Security Middleware
 app.use(helmet({
   crossOriginEmbedderPolicy: false,
