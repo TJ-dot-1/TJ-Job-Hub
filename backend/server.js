@@ -12,21 +12,16 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const io = new SocketIO(server, {
-  cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
-});
 
-// Trust proxy for rate limiting (important for Vercel deployment)
+// Trust proxy for Vercel
 app.set('trust proxy', 1);
 
 // Security Middleware
@@ -36,16 +31,21 @@ app.use(helmet({
 }));
 app.use(compression());
 
-// Rate Limiting
+// Rate Limiting - Fixed for Vercel
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 1000
+  max: 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    return req.headers['x-forwarded-for']?.split(',')[0] || req.ip;
+  }
 });
 app.use(limiter);
 
-// Enhanced CORS Configuration
+// CORS
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3002'], // Support both default and alternate Vite ports
+  origin: ['http://localhost:3000', 'http://localhost:3002', 'https://tj-job-hub-nhfn.vercel.app'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -55,10 +55,30 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Serve static files from dist folder (your built frontend)
+app.use(express.static(path.join(__dirname, 'dist'), {
+  setHeaders: (res, path) => {
+    // Set proper MIME types
+    if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    } else if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+  }
+}));
+
+// Socket.io setup
+const io = new SocketIO(server, {
+  cors: {
+    origin: process.env.CLIENT_URL || "https://tj-job-hub-nhfn.vercel.app",
+    methods: ["GET", "POST"]
+  }
+});
+
 // Multer middleware for file uploads
 import multer from 'multer';
 const upload = multer({
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
       cb(null, true);
@@ -68,31 +88,25 @@ const upload = multer({
   }
 });
 
-// Make multer available globally
 app.use((req, res, next) => {
   req.upload = upload;
   next();
 });
 
-// Pre-flight OPTIONS handling
-app.options('*', cors());
-
-// Session middleware for Passport
+// Session and Passport setup
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your-session-secret',
   resave: false,
   saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 24 * 60 * 60 * 1000
   }
 }));
 
-// Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Passport serialization
 passport.serializeUser((user, done) => {
   done(null, user._id);
 });
@@ -107,93 +121,52 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// Static Files
+// Static files
 app.use('/uploads', express.static('uploads'));
-
-// Serve static assets with proper MIME types
-app.use('/assets', (req, res, next) => {
-  const filePath = path.join(__dirname, 'assets', req.path);
-  const ext = path.extname(req.path);
-
-  if (ext === '.css') {
-    res.setHeader('Content-Type', 'text/css');
-  } else if (ext === '.js') {
-    res.setHeader('Content-Type', 'application/javascript');
-  } else if (ext === '.png') {
-    res.setHeader('Content-Type', 'image/png');
-  } else if (ext === '.jpg' || ext === '.jpeg') {
-    res.setHeader('Content-Type', 'image/jpeg');
-  } else if (ext === '.svg') {
-    res.setHeader('Content-Type', 'image/svg+xml');
-  } else if (ext === '.ico') {
-    res.setHeader('Content-Type', 'image/x-icon');
-  }
-
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error('Error serving asset:', req.path, err);
-      next();
-    }
-  });
-});
-
-// Serve favicon.ico from current directory
-app.get('/favicon.ico', (req, res) => {
-  res.sendFile(path.join(__dirname, 'ted.jpg'));
-});
 
 // Database Connection
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tj-job-portal');
+    if (process.env.MONGODB_URI) {
+      await mongoose.connect(process.env.MONGODB_URI);
+      console.log('✅ MongoDB Connected Successfully');
+      
+      try {
+        const Job = (await import('./models/Job.js')).default;
+        await Job.collection.dropIndex('seo.slug_1');
+        console.log('✅ Dropped seo.slug unique index');
+      } catch (indexError) {
+        console.log('Note: No seo.slug index to drop');
+      }
 
-    // Drop the problematic unique index if it exists
-    try {
-      const Job = (await import('./models/Job.js')).default;
-      await Job.collection.dropIndex('seo.slug_1');
-      console.log('✅ Dropped seo.slug unique index');
-    } catch (indexError) {
-      // Index might not exist, which is fine
-      console.log('Note: No seo.slug index to drop');
+      const { scheduleMonthlyReset } = await import('./utils/resetUsage.js');
+      scheduleMonthlyReset();
     }
-
-    console.log('✅ MongoDB Connected Successfully');
-
-    // Initialize monthly usage reset scheduler
-    const { scheduleMonthlyReset } = await import('./utils/resetUsage.js');
-    scheduleMonthlyReset();
   } catch (error) {
     console.error('❌ MongoDB connection error:', error);
-    process.exit(1);
   }
 };
 connectDB();
 
-// Socket.io for Real-time Features
+// Socket.io
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
-
   socket.on('join-room', (userId) => {
     socket.join(userId);
     console.log(`User ${userId} joined room`);
   });
-
   socket.on('send-message', (data) => {
     socket.to(data.receiverId).emit('receive-message', data);
   });
-
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
   });
 });
 
-// Store io instance for use in routes
 app.set('io', io);
 
-// Import auth middleware
+// Import and use routes
 const { verifyToken } = await import('./middleware/auth.js');
-
-// Routes
 const authRouter = (await import('./routes/auth.js')).default;
 const applicationsRouter = (await import('./routes/applications.js')).default;
 
@@ -213,9 +186,9 @@ app.use('/api/admin', (await import('./routes/admin.js')).default);
 app.use('/api/cv-revamp', (await import('./routes/cv-revamp.js')).default);
 app.use('/api/ai', (await import('./routes/ai.js')).default);
 
-// Simple demo routes for testing
+// API routes
 app.get('/api/health', (req, res) => {
-  res.status(200).json({
+  res.json({
     status: 'OK',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
@@ -223,8 +196,14 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Serve React app for all non-API routes (SPA support)
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api/') && !req.path.startsWith('/socket.io/')) {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  }
+});
 
-// Error Handling Middleware
+// Error handling
 app.use((error, req, res, next) => {
   console.error(error);
   res.status(500).json({
@@ -233,64 +212,5 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Serve React app for non-API routes (must be last)
-app.get('*', (req, res) => {
-  // Skip API routes
-  if (req.path.startsWith('/api/') || req.path.startsWith('/socket.io/')) {
-    return res.status(404).json({
-      success: false,
-      message: 'API endpoint not found'
-    });
-  }
-
-  // Serve the React app's index.html for all other routes
-  res.sendFile(path.join(__dirname, 'index.html'), (err) => {
-    if (err) {
-      console.error('Error serving index.html:', err);
-      res.status(500).send('Internal Server Error');
-    }
-  });
-});
-
-// For Vercel deployment, export the app
-if (process.env.VERCEL) {
-  module.exports = app;
-} else {
-  // For local development, start the server
-  const startServer = async (retries = 3) => {
-    const PORT = process.env.PORT || 5000;
-
-    try {
-      await new Promise((resolve, reject) => {
-        server.listen(PORT, () => {
-          console.log(`🚀 Server running on port ${PORT}`);
-          console.log(`📊 Environment: ${process.env.NODE_ENV}`);
-          console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
-          console.log(`🔐 Auth endpoints: http://localhost:${PORT}/api/auth`);
-          console.log(`💼 Employer endpoints: http://localhost:${PORT}/api/employer`);
-          console.log(`💬 Chat endpoints: http://localhost:${PORT}/api/chat`);
-          console.log(`📝 Application endpoints: http://localhost:${PORT}/api/applications`);
-          resolve();
-        }).on('error', (err) => {
-          if (err.code === 'EADDRINUSE') {
-            reject(new Error(`Port ${PORT} is already in use`));
-          } else {
-            reject(err);
-          }
-        });
-      });
-    } catch (error) {
-      if (retries > 0 && error.message.includes('already in use')) {
-        const nextPort = parseInt(PORT) + 1;
-        console.log(`Port ${PORT} is busy, trying port ${nextPort}...`);
-        process.env.PORT = nextPort.toString();
-        await startServer(retries - 1);
-      } else {
-        console.error('Failed to start server:', error.message);
-        process.exit(1);
-      }
-    }
-  };
-
-  startServer();
-}
+// For Vercel - export the app
+export default app;
