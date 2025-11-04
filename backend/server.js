@@ -19,19 +19,19 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-//const io = new SocketIO(server, {
-  //cors: {
-    //origin: [
-     // 'http://localhost:3000',
-      //'http://localhost:3002',
-      //'https://tj-job-hub.vercel.app',
-      //'https://tj-job-hub-nhfn.vercel.app'
-   // ],
-    //methods: ["GET", "POST"],
-   // credentials: true
+const io = new SocketIO(server, {
+  cors: {
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3002',
+      'https://tj-job-hub.vercel.app',
+      'https://tj-job-hub-nhfn.vercel.app'
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
   },
- // path: '/socket.io/' // Explicitly set the path
-//});
+  path: '/socket.io/' // Explicitly set the path
+});
 
 // Trust proxy for rate limiting (important for Vercel deployment)
 app.set('trust proxy', 1);
@@ -246,7 +246,7 @@ app.use('/api/*', (req, res) => {
 
 // ==================== VERCEL COMPATIBLE EXPORT ====================
 
-// Export the app for Vercel serverless functions
+// Export for Vercel serverless functions
 export default app;
 
 // For local development only
