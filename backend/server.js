@@ -36,16 +36,21 @@ app.use(helmet({
 }));
 app.use(compression());
 
-// Rate Limiting
+// Rate Limiting - FIXED FOR VERCEL
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 1000
+  max: 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    return req.headers['x-forwarded-for']?.split(',')[0] || req.ip;
+  }
 });
 app.use(limiter);
 
 // Enhanced CORS Configuration
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3002'], // Support both default and alternate Vite ports
+  origin: ['http://localhost:3000', 'http://localhost:3002', 'https://tj-job-hub-nhfn.vercel.app'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -110,36 +115,24 @@ passport.deserializeUser(async (id, done) => {
 // Static Files
 app.use('/uploads', express.static('uploads'));
 
-// Serve static assets with proper MIME types
-app.use('/assets', (req, res, next) => {
-  const filePath = path.join(__dirname, 'assets', req.path);
-  const ext = path.extname(req.path);
-
-  if (ext === '.css') {
-    res.setHeader('Content-Type', 'text/css');
-  } else if (ext === '.js') {
-    res.setHeader('Content-Type', 'application/javascript');
-  } else if (ext === '.png') {
-    res.setHeader('Content-Type', 'image/png');
-  } else if (ext === '.jpg' || ext === '.jpeg') {
-    res.setHeader('Content-Type', 'image/jpeg');
-  } else if (ext === '.svg') {
-    res.setHeader('Content-Type', 'image/svg+xml');
-  } else if (ext === '.ico') {
-    res.setHeader('Content-Type', 'image/x-icon');
-  }
-
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error('Error serving asset:', req.path, err);
-      next();
+// ==================== ROOT ROUTE HANDLER ====================
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Job Hub API Server is running!',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'production',
+    status: 'OK',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth',
+      jobs: '/api/jobs'
     }
   });
 });
 
-// Serve favicon.ico from current directory
+// Favicon handler
 app.get('/favicon.ico', (req, res) => {
-  res.sendFile(path.join(__dirname, 'ted.jpg'));
+  res.status(204).end();
 });
 
 // Database Connection
@@ -223,7 +216,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-
 // Error Handling Middleware
 app.use((error, req, res, next) => {
   console.error(error);
@@ -233,58 +225,24 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Serve React app for non-API routes (must be last)
-app.get('*', (req, res) => {
-  // Skip API routes
-  if (req.path.startsWith('/api/') || req.path.startsWith('/socket.io/')) {
-    return res.status(404).json({
-      success: false,
-      message: 'API endpoint not found'
-    });
-  }
-
-  // Serve the React app's index.html for all other routes
-  res.sendFile(path.join(__dirname, 'index.html'), (err) => {
-    if (err) {
-      console.error('Error serving index.html:', err);
-      res.status(500).send('Internal Server Error');
-    }
+// 404 handler for API routes
+app.use('/api/*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'API endpoint not found'
   });
 });
 
-const startServer = async (retries = 3) => {
-  const PORT = process.env.PORT || 5000;
-  
-  try {
-    await new Promise((resolve, reject) => {
-      server.listen(PORT, () => {
-        console.log(`🚀 Server running on port ${PORT}`);
-        console.log(`📊 Environment: ${process.env.NODE_ENV}`);
-        console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
-        console.log(`🔐 Auth endpoints: http://localhost:${PORT}/api/auth`);
-        console.log(`💼 Employer endpoints: http://localhost:${PORT}/api/employer`);
-        console.log(`💬 Chat endpoints: http://localhost:${PORT}/api/chat`);
-        console.log(`📝 Application endpoints: http://localhost:${PORT}/api/applications`);
-        resolve();
-      }).on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
-          reject(new Error(`Port ${PORT} is already in use`));
-        } else {
-          reject(err);
-        }
-      });
-    });
-  } catch (error) {
-    if (retries > 0 && error.message.includes('already in use')) {
-      const nextPort = parseInt(PORT) + 1;
-      console.log(`Port ${PORT} is busy, trying port ${nextPort}...`);
-      process.env.PORT = nextPort.toString();
-      await startServer(retries - 1);
-    } else {
-      console.error('Failed to start server:', error.message);
-      process.exit(1);
-    }
-  }
-};
+// ==================== VERCEL COMPATIBLE EXPORT ====================
+const PORT = process.env.PORT || 5000;
 
-startServer();
+// Only start server if not in Vercel environment
+if (process.env.VERCEL !== '1') {
+  server.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📊 Environment: ${process.env.NODE_ENV}`);
+  });
+}
+
+// Export for Vercel
+export default app;
