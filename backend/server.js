@@ -110,6 +110,9 @@ passport.deserializeUser(async (id, done) => {
 // Static Files
 app.use('/uploads', express.static('uploads'));
 
+// Serve static assets
+app.use(express.static(__dirname));
+
 // Serve favicon.ico from current directory
 app.get('/favicon.ico', (req, res) => {
   res.sendFile(path.join(__dirname, 'ted.jpg'));
