@@ -21,9 +21,16 @@ const app = express();
 const server = http.createServer(app);
 const io = new SocketIO(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3002',
+      'https://tj-job-hub.vercel.app',
+      'https://tj-job-hub-nhfn.vercel.app'
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
+  },
+  path: '/socket.io/' // Explicitly set the path
 });
 
 // Trust proxy for rate limiting (important for Vercel deployment)
