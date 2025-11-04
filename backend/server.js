@@ -57,7 +57,7 @@ app.use(limiter);
 
 // Enhanced CORS Configuration
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3002', 'https://tj-job-hub-nhfn.vercel.app'],
+  origin: ['http://localhost:3000', 'http://localhost:3002', 'https://tj-job-hub.vercel.app'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
