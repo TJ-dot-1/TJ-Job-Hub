@@ -309,12 +309,18 @@ app.use((error, req, res, next) => {
   });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'API endpoint not found'
-  });
+// Serve React app for non-API routes
+app.get('*', (req, res) => {
+  // Skip API routes
+  if (req.path.startsWith('/api/') || req.path.startsWith('/socket.io/')) {
+    return res.status(404).json({
+      success: false,
+      message: 'API endpoint not found'
+    });
+  }
+
+  // Serve the React app's index.html for all other routes
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 const startServer = async (retries = 3) => {
