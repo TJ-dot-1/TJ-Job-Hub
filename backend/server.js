@@ -169,26 +169,30 @@ const connectDB = async () => {
 };
 connectDB();
 
-// Socket.io for Real-time Features
-io.on('connection', (socket) => {
-  console.log('User connected:', socket.id);
+// Socket.io for Real-time Features - DISABLED FOR VERCEL
+if (process.env.VERCEL !== '1') {
+  io.on('connection', (socket) => {
+    console.log('User connected:', socket.id);
 
-  socket.on('join-room', (userId) => {
-    socket.join(userId);
-    console.log(`User ${userId} joined room`);
+    socket.on('join-room', (userId) => {
+      socket.join(userId);
+      console.log(`User ${userId} joined room`);
+    });
+
+    socket.on('send-message', (data) => {
+      socket.to(data.receiverId).emit('receive-message', data);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('User disconnected:', socket.id);
+    });
   });
 
-  socket.on('send-message', (data) => {
-    socket.to(data.receiverId).emit('receive-message', data);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
-  });
-});
-
-// Store io instance for use in routes
-app.set('io', io);
+  // Store io instance for use in routes
+  app.set('io', io);
+} else {
+  console.log('Socket.IO disabled for Vercel deployment');
+}
 
 // Import auth middleware
 const { verifyToken } = await import('./middleware/auth.js');
