@@ -110,9 +110,9 @@ passport.deserializeUser(async (id, done) => {
 // Static Files
 app.use('/uploads', express.static('uploads'));
 
-// Serve favicon.ico from frontend dist
+// Serve favicon.ico from current directory
 app.get('/favicon.ico', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/favicon.ico'));
+  res.sendFile(path.join(__dirname, 'ted.jpg'));
 });
 
 // Database Connection
@@ -320,7 +320,7 @@ app.get('*', (req, res) => {
   }
 
   // Serve the React app's index.html for all other routes
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 const startServer = async (retries = 3) => {
