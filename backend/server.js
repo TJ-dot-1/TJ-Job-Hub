@@ -9,6 +9,10 @@ import { Server as SocketIO } from 'socket.io';
 import passport from 'passport';
 import session from 'express-session';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Load environment variables
 dotenv.config();
@@ -102,6 +106,11 @@ passport.deserializeUser(async (id, done) => {
 
 // Static Files
 app.use('/uploads', express.static('uploads'));
+
+// Serve favicon.ico from frontend dist
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/favicon.ico'));
+});
 
 // Database Connection
 const connectDB = async () => {
