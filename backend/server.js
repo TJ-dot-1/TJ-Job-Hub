@@ -117,6 +117,14 @@ app.use('/assets', express.static(path.join(__dirname, 'assets'), {
       res.setHeader('Content-Type', 'text/css');
     } else if (path.endsWith('.js')) {
       res.setHeader('Content-Type', 'application/javascript');
+    } else if (path.endsWith('.png')) {
+      res.setHeader('Content-Type', 'image/png');
+    } else if (path.endsWith('.jpg') || path.endsWith('.jpeg')) {
+      res.setHeader('Content-Type', 'image/jpeg');
+    } else if (path.endsWith('.svg')) {
+      res.setHeader('Content-Type', 'image/svg+xml');
+    } else if (path.endsWith('.ico')) {
+      res.setHeader('Content-Type', 'image/x-icon');
     }
   }
 }));
