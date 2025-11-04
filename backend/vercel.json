@@ -8,15 +8,15 @@
   ],
   "routes": [
     {
-      "src": "/favicon.ico",
-      "dest": "/server.js"
-    },
-    {
       "src": "/api/(.*)",
       "dest": "/server.js"
     },
     {
       "src": "/socket.io/(.*)",
+      "dest": "/server.js"
+    },
+    {
+      "src": "/favicon.ico",
       "dest": "/server.js"
     },
     {

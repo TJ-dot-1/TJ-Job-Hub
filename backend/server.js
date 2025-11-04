@@ -234,15 +234,15 @@ app.use('/api/*', (req, res) => {
 });
 
 // ==================== VERCEL COMPATIBLE EXPORT ====================
-const PORT = process.env.PORT || 5000;
 
-// Only start server if not in Vercel environment
+// Export for Vercel (must be at the top level)
+export default app;
+
+// For local development only
 if (process.env.VERCEL !== '1') {
+  const PORT = process.env.PORT || 5000;
   server.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📊 Environment: ${process.env.NODE_ENV}`);
   });
 }
-
-// Export for Vercel
-export default app;
