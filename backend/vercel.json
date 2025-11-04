@@ -8,6 +8,10 @@
   ],
   "routes": [
     {
+      "src": "/favicon.ico",
+      "dest": "/server.js"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/server.js"
     },
@@ -15,10 +19,5 @@
       "src": "/socket.io/(.*)",
       "dest": "/server.js"
     }
-  ],
-  "functions": {
-    "server.js": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }
