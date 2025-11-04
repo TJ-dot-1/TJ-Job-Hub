@@ -23,10 +23,5 @@
       "src": "/(.*)",
       "dest": "/server.js"
     }
-  ],
-  "includeFiles": [
-    "index.html",
-    "assets/**",
-    "ted.jpg"
   ]
 }
