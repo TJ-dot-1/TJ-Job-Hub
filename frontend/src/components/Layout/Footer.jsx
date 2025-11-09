@@ -68,7 +68,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-1">
-            <Link to="/" className="flex items-center space-x-2 mb-4">
+            <Link to="/" className="flex items-center space-x-2 mb-4" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               <img
                 src="/ted.jpg"
                 alt="TJ Jobs Logo"
@@ -102,10 +102,10 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">For Job Seekers</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><Link to="/jobs" className="hover:text-white transition-colors">Browse Jobs</Link></li>
-              <li><Link to="/companies" className="hover:text-white transition-colors">Companies</Link></li>
-              <li><Link to="/assessments" className="hover:text-white transition-colors">Skill Assessments</Link></li>
-              <li><Link to="/career-advice" className="hover:text-white transition-colors">Career Advice</Link></li>
+              <li><Link to="/jobs" className="hover:text-white transition-colors" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Browse Jobs</Link></li>
+              <li><Link to="/companies" className="hover:text-white transition-colors" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Companies</Link></li>
+              <li><Link to="/assessments" className="hover:text-white transition-colors" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Skill Assessments</Link></li>
+              <li><Link to="/career-advice" className="hover:text-white transition-colors" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Career Advice</Link></li>
             </ul>
           </div>
 
@@ -113,10 +113,10 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">For Employers</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><Link to="/post-job" className="hover:text-white transition-colors">Post a Job</Link></li>
-              <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
-              <li><Link to="/recruit" className="hover:text-white transition-colors">Recruit</Link></li>
-              <li><Link to="/dashboard" className="hover:text-white transition-colors">Employer Dashboard</Link></li>
+              <li><Link to="/post-job" className="hover:text-white transition-colors" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Post a Job</Link></li>
+              <li><Link to="/pricing" className="hover:text-white transition-colors" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Pricing</Link></li>
+              <li><Link to="/recruit" className="hover:text-white transition-colors" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Recruit</Link></li>
+              <li><Link to="/dashboard" className="hover:text-white transition-colors" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Employer Dashboard</Link></li>
             </ul>
           </div>
 
@@ -124,10 +124,10 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
-              <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-              <li><Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link to="/about" className="hover:text-white transition-colors" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>About Us</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Contact</Link></li>
+              <li><Link to="/privacy" className="hover:text-white transition-colors" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Privacy Policy</Link></li>
+              <li><Link to="/terms" className="hover:text-white transition-colors" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Terms of Service</Link></li>
             </ul>
 
             {/* Feedback Button */}

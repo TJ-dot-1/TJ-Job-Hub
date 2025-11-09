@@ -16,7 +16,7 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 sm:h-18">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <img
               src="/ted.jpg"
               alt="TJ Jobs Logo"
@@ -27,17 +27,17 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-4 lg:space-x-6 xl:space-x-8">
-            <Link to="/jobs" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm lg:text-base">
+            <Link to="/jobs" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm lg:text-base" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               Find Jobs
             </Link>
-            <Link to="/companies" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm lg:text-base">
+            <Link to="/companies" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm lg:text-base" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               Companies
             </Link>
-            <Link to="/cv-revamp" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm lg:text-base">
+            <Link to="/cv-revamp" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm lg:text-base" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               CV Revamp
             </Link>
             {isAuthenticated && (
-              <Link to="/dashboard" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm lg:text-base">
+              <Link to="/dashboard" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm lg:text-base" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 Dashboard
               </Link>
             )}
