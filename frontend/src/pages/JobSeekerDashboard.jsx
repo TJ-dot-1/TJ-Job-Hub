@@ -155,19 +155,19 @@ const JobSeekerDashboard = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 lg:mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 lg:mb-8">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">Applications Sent</p>
-                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.applicationsSent}</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Applications Sent</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.applicationsSent}</p>
               </div>
-              <div className="bg-blue-100 dark:bg-blue-900 p-2 sm:p-3 rounded-lg">
-                <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" />
+              <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-lg">
+                <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
             </div>
-            <div className="flex items-center mt-2 text-xs sm:text-sm text-green-600 dark:text-green-400">
-              <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+            <div className="flex items-center mt-2 text-sm text-green-600 dark:text-green-400">
+              <TrendingUp className="w-4 h-4 mr-1" />
               <span>Active applications</span>
             </div>
           </div>
@@ -175,15 +175,15 @@ const JobSeekerDashboard = () => {
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">Interviews Scheduled</p>
-                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.interviewsScheduled}</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Interviews Scheduled</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.interviewsScheduled}</p>
               </div>
-              <div className="bg-purple-100 dark:bg-purple-900 p-2 sm:p-3 rounded-lg">
-                <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
+              <div className="bg-purple-100 dark:bg-purple-900 p-3 rounded-lg">
+                <Calendar className="w-6 h-6 text-purple-600 dark:text-purple-400" />
               </div>
             </div>
-            <div className="flex items-center mt-2 text-xs sm:text-sm text-purple-600 dark:text-purple-400">
-              <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+            <div className="flex items-center mt-2 text-sm text-purple-600 dark:text-purple-400">
+              <Calendar className="w-4 h-4 mr-1" />
               <span>Upcoming interviews</span>
             </div>
           </div>
@@ -191,15 +191,15 @@ const JobSeekerDashboard = () => {
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">Profile Views</p>
-                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.profileViews}</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Profile Views</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.profileViews}</p>
               </div>
-              <div className="bg-green-100 dark:bg-green-900 p-2 sm:p-3 rounded-lg">
-                <Eye className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" />
+              <div className="bg-green-100 dark:bg-green-900 p-3 rounded-lg">
+                <Eye className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
             </div>
-            <div className="flex items-center mt-2 text-xs sm:text-sm text-green-600 dark:text-green-400">
-              <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+            <div className="flex items-center mt-2 text-sm text-green-600 dark:text-green-400">
+              <TrendingUp className="w-4 h-4 mr-1" />
               <span>Profile visibility</span>
             </div>
           </div>
@@ -207,15 +207,15 @@ const JobSeekerDashboard = () => {
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">Profile Completeness</p>
-                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.profileCompleteness}%</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Profile Completeness</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.profileCompleteness}%</p>
               </div>
-              <div className="bg-orange-100 dark:bg-orange-900 p-2 sm:p-3 rounded-lg">
-                <User className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600 dark:text-orange-400" />
+              <div className="bg-orange-100 dark:bg-orange-900 p-3 rounded-lg">
+                <User className="w-6 h-6 text-orange-600 dark:text-orange-400" />
               </div>
             </div>
-            <div className="flex items-center mt-2 text-xs sm:text-sm text-orange-600 dark:text-orange-400">
-              <Star className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+            <div className="flex items-center mt-2 text-sm text-orange-600 dark:text-orange-400">
+              <Star className="w-4 h-4 mr-1" />
               <span>Complete your profile</span>
             </div>
           </div>
@@ -225,7 +225,7 @@ const JobSeekerDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm mb-6 sm:mb-8">
             <div className="border-b border-gray-200 dark:border-gray-700">
-              <nav className="flex overflow-x-auto space-x-4 sm:space-x-8 px-4 sm:px-6 scrollbar-hide">
+              <nav className="flex overflow-x-auto space-x-6 px-4 scrollbar-hide">
                 {[
                   { id: 'overview', name: 'Overview', icon: TrendingUp },
                   { id: 'profile', name: 'Profile Overview', icon: User },
@@ -240,15 +240,14 @@ const JobSeekerDashboard = () => {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center space-x-1 sm:space-x-2 py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
+                      className={`flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap ${
                         activeTab === tab.id
                           ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                           : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                       }`}
                     >
-                      <IconComponent className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                      <span className="hidden sm:inline">{tab.name}</span>
-                      <span className="sm:hidden">{tab.name.split(' ')[0]}</span>
+                      <IconComponent className="w-4 h-4 flex-shrink-0" />
+                      <span>{tab.name.split(' ')[0]}</span>
                     </button>
                   );
                 })}
@@ -261,30 +260,30 @@ const JobSeekerDashboard = () => {
               {activeTab === 'overview' && (
                 <div className="space-y-8">
                   {/* Quick Actions */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                  <div className="grid grid-cols-1 gap-4">
                     <button
                       onClick={() => navigate('/jobs')}
-                      className="bg-blue-600 text-white p-4 sm:p-6 rounded-lg hover:bg-blue-700 transition-colors text-left"
+                      className="bg-blue-600 text-white p-6 rounded-lg hover:bg-blue-700 transition-colors text-left w-full"
                     >
-                      <Search className="w-6 h-6 sm:w-8 sm:h-8 mb-2" />
-                      <h3 className="font-semibold mb-1 text-sm sm:text-base">Find Jobs</h3>
-                      <p className="text-xs sm:text-sm opacity-90">Browse and apply to new opportunities</p>
+                      <Search className="w-8 h-8 mb-2" />
+                      <h3 className="font-semibold mb-1 text-base">Find Jobs</h3>
+                      <p className="text-sm opacity-90">Browse and apply to new opportunities</p>
                     </button>
                     <button
                       onClick={() => navigate('/profile')}
-                      className="bg-green-600 text-white p-4 sm:p-6 rounded-lg hover:bg-green-700 transition-colors text-left"
+                      className="bg-green-600 text-white p-6 rounded-lg hover:bg-green-700 transition-colors text-left w-full"
                     >
-                      <User className="w-6 h-6 sm:w-8 sm:h-8 mb-2" />
-                      <h3 className="font-semibold mb-1 text-sm sm:text-base">Update Profile</h3>
-                      <p className="text-xs sm:text-sm opacity-90">Improve your profile completeness</p>
+                      <User className="w-8 h-8 mb-2" />
+                      <h3 className="font-semibold mb-1 text-base">Update Profile</h3>
+                      <p className="text-sm opacity-90">Improve your profile completeness</p>
                     </button>
                     <button
                       onClick={() => navigate('/cv-revamp')}
-                      className="bg-purple-600 text-white p-4 sm:p-6 rounded-lg hover:bg-purple-700 transition-colors text-left"
+                      className="bg-purple-600 text-white p-6 rounded-lg hover:bg-purple-700 transition-colors text-left w-full"
                     >
-                      <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 mb-2" />
-                      <h3 className="font-semibold mb-1 text-sm sm:text-base">CV Revamp</h3>
-                      <p className="text-xs sm:text-sm opacity-90">Get AI-powered CV optimization</p>
+                      <Sparkles className="w-8 h-8 mb-2" />
+                      <h3 className="font-semibold mb-1 text-base">CV Revamp</h3>
+                      <p className="text-sm opacity-90">Get AI-powered CV optimization</p>
                     </button>
                   </div>
 
@@ -363,7 +362,7 @@ const JobSeekerDashboard = () => {
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                    <div className="grid grid-cols-1 gap-4">
                       {recommendedJobs.slice(0, 3).length > 0 ? recommendedJobs.slice(0, 3).map((job) => (
                         <div key={job._id} className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow">
                           <div className="flex justify-between items-start mb-3 sm:mb-4">
@@ -380,24 +379,24 @@ const JobSeekerDashboard = () => {
                             </span>
                           </div>
 
-                          <div className="space-y-1 sm:space-y-2 mb-3 sm:mb-4">
-                            <div className="flex items-center text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                              <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                          <div className="space-y-2 mb-4">
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                              <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
                               <span className="truncate">{job.location}</span>
                             </div>
-                            <div className="flex items-center text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                              <Briefcase className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                              <Briefcase className="w-4 h-4 mr-2 flex-shrink-0" />
                               <span className="truncate">{job.jobType?.replace('-', ' ') || 'Full-time'}</span>
                             </div>
-                            <div className="flex items-center text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                              <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                              <DollarSign className="w-4 h-4 mr-2 flex-shrink-0" />
                               <span className="truncate">{job.salary?.min ? `$${job.salary.min.toLocaleString()} - $${job.salary.max?.toLocaleString() || 'Negotiable'}` : 'Negotiable'}</span>
                             </div>
                           </div>
 
                           <button
                             onClick={() => navigate(`/jobs/${job._id}`)}
-                            className="w-full bg-blue-600 text-white py-2 px-4 rounded text-xs sm:text-sm font-medium hover:bg-blue-700 transition-colors"
+                            className="w-full bg-blue-600 text-white py-3 px-4 rounded text-sm font-medium hover:bg-blue-700 transition-colors"
                           >
                             View Details
                           </button>
@@ -583,17 +582,12 @@ const JobSeekerDashboard = () => {
                           </div>
                         </div>
 
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => navigate(`/jobs/${job._id}`)}
-                            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded text-sm font-medium hover:bg-blue-700 transition-colors"
-                          >
-                            View Details
-                          </button>
-                          <button className="p-2 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 rounded hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                            <Bookmark className="w-4 h-4" />
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => navigate(`/jobs/${job._id}`)}
+                          className="w-full bg-blue-600 text-white py-3 px-4 rounded text-sm font-medium hover:bg-blue-700 transition-colors"
+                        >
+                          View Details
+                        </button>
                       </div>
                     )) : (
                       <div className="col-span-full text-center py-12">
@@ -657,17 +651,12 @@ const JobSeekerDashboard = () => {
                           </div>
                         </div>
 
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => navigate(`/jobs/${job._id}`)}
-                            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded text-sm font-medium hover:bg-blue-700 transition-colors"
-                          >
-                            View Details
-                          </button>
-                          <button className="p-2 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 rounded hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                            <Bookmark className="w-4 h-4" />
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => navigate(`/jobs/${job._id}`)}
+                          className="w-full bg-blue-600 text-white py-3 px-4 rounded text-sm font-medium hover:bg-blue-700 transition-colors"
+                        >
+                          View Details
+                        </button>
                       </div>
                     )) : (
                       <div className="col-span-full text-center py-12">
