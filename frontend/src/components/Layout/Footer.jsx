@@ -245,11 +245,11 @@ const Footer = () => {
           </div>
         )}
 
-        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col justify-center items-center text-center">
           <p className="text-gray-400 text-sm">
             © 2025 TJ Job Hub. All rights reserved.
           </p>
-          <div className="flex items-center space-x-2 mt-4 md:mt-0">
+          <div className="flex items-center space-x-2 mt-4">
             <span className="text-gray-400 text-sm">Made with</span>
             <Heart className="w-4 h-4 text-red-500" />
             <span className="text-gray-400 text-sm">for a better world</span>

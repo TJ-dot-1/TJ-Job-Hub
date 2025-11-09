@@ -37,7 +37,7 @@ const HeroSearch = () => {
             value={searchData.query}
             onChange={handleChange}
             placeholder="Job title, keywords, or company"
-            className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 text-gray-900 placeholder-gray-500 outline-none rounded-lg text-sm sm:text-base"
+            className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 text-gray-900 placeholder-gray-500 outline-none rounded-lg text-lg sm:text-xl"
           />
         </div>
 
@@ -49,13 +49,13 @@ const HeroSearch = () => {
             value={searchData.location}
             onChange={handleChange}
             placeholder="City, state, or remote"
-            className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 text-gray-900 placeholder-gray-500 outline-none rounded-lg text-sm sm:text-base"
+            className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 text-gray-900 placeholder-gray-500 outline-none rounded-lg text-lg sm:text-xl"
           />
         </div>
 
         <button
           type="submit"
-          className="bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2 text-sm sm:text-base"
+          className="bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2 text-lg sm:text-xl"
         >
           <Search className="w-4 h-4 sm:w-5 sm:h-5" />
           <span>Search Jobs</span>
@@ -73,7 +73,7 @@ const HeroSearch = () => {
                 navigate(`/jobs?query=${tag}`);
               }, 100);
             }}
-            className="px-2 sm:px-3 py-1 bg-white/10 backdrop-blur-sm text-white rounded-full text-xs sm:text-sm hover:bg-white/20 transition-colors border border-white/20"
+            className="px-2 sm:px-3 py-1 bg-white/10 backdrop-blur-sm text-white rounded-full text-base sm:text-lg hover:bg-white/20 transition-colors border border-white/20"
           >
             {tag}
           </button>

@@ -65,7 +65,7 @@ const Home = () => {
             
             <HeroSearch />
             
-            <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
+            <div className="mt-6 sm:mt-8 grid grid-cols-1 gap-4 sm:gap-6 max-w-4xl mx-auto">
               {sdgFeatures.map((feature, index) => (
                 <div
                   key={index}
@@ -125,16 +125,16 @@ const Home = () => {
           <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
             Join thousands of job seekers and employers already using our platform.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-4 justify-center">
+          <div className="flex flex-col gap-4 justify-center w-full max-w-md mx-auto">
             <Link
               to="/register"
-              className="bg-blue-600 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg hover:bg-blue-700 transition-colors text-center"
+              className="w-full bg-blue-600 text-white px-6 py-4 rounded-lg hover:bg-blue-700 transition-colors text-center text-lg font-medium"
             >
               Get Started Free
             </Link>
             <Link
               to="/jobs"
-              className="bg-transparent border border-white text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg hover:bg-white hover:text-gray-900 transition-colors text-center"
+              className="w-full bg-transparent border-2 border-white text-white px-6 py-4 rounded-lg hover:bg-white hover:text-gray-900 transition-colors text-center text-lg font-medium"
             >
               Browse Jobs
             </Link>

@@ -14,7 +14,7 @@ const Header = () => {
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-14 sm:h-16">
+        <div className="flex justify-between items-center h-16 sm:h-18">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img
@@ -22,7 +22,7 @@ const Header = () => {
               alt="TJ Jobs Logo"
               className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg object-cover"
             />
-            <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">TJ Jobs</span>
+            <span className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">TJ Jobs</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -48,9 +48,9 @@ const Header = () => {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
-              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              {theme === 'dark' ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
             </button>
 
             {/* Auth Buttons */}
@@ -60,7 +60,7 @@ const Header = () => {
                 {user?.role === 'job_seeker' && <Notifications />}
                 <Link
                   to="/profile"
-                  className="flex items-center space-x-1 sm:space-x-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
                   {user?.profile?.avatar ? (
                     <img
@@ -103,34 +103,34 @@ const Header = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="md:hidden p-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
-              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden border-t dark:border-gray-700 py-4">
-            <nav className="flex flex-col space-y-4">
+          <div className="md:hidden border-t dark:border-gray-700 py-6">
+            <nav className="flex flex-col space-y-6">
               <Link
                 to="/jobs"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm"
+                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-base"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Find Jobs
               </Link>
               <Link
                 to="/companies"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm"
+                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-base"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Companies
               </Link>
               <Link
                 to="/cv-revamp"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm"
+                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-base"
                 onClick={() => setIsMenuOpen(false)}
               >
                 CV Revamp
@@ -138,7 +138,7 @@ const Header = () => {
               {isAuthenticated && (
                 <Link
                   to="/dashboard"
-                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm"
+                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-base"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Dashboard

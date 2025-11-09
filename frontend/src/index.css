@@ -7,6 +7,14 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* Increase font size on mobile devices */
+@media (max-width: 640px) {
+  body {
+    font-size: 20px;
+  }
 }
 
 .line-clamp-2 {

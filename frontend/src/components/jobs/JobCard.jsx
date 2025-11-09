@@ -125,9 +125,9 @@ const JobCard = ({ job }) => {
         <div className="flex justify-between items-start mb-4">
           <div className="flex-1">
         <div className="flex items-center justify-between mb-2">
-              <Link 
+              <Link
                 to={`/jobs/${job._id}`}
-                className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2"
+                className="text-xl sm:text-2xl font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2"
               >
                 {job.title}
               </Link>
@@ -173,29 +173,29 @@ const JobCard = ({ job }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4">
           <div className="flex items-center text-gray-600">
             <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
-            <span className="text-sm">{job.location}</span>
+            <span className="text-base sm:text-lg">{job.location}</span>
           </div>
           
           <div className="flex items-center text-gray-600">
             <Briefcase className="w-4 h-4 mr-2 flex-shrink-0" />
-            <span className="text-sm capitalize">{job.jobType?.replace('-', ' ')}</span>
+            <span className="text-base sm:text-lg capitalize">{job.jobType?.replace('-', ' ')}</span>
           </div>
           
           <div className="flex items-center text-gray-600">
             <DollarSign className="w-4 h-4 mr-2 flex-shrink-0" />
-            <span className="text-sm">{formatSalary(job.salary)}</span>
+            <span className="text-base sm:text-lg">{formatSalary(job.salary)}</span>
           </div>
           
           <div className="flex items-center text-gray-600">
             <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
-            <span className="text-sm">
+            <span className="text-base sm:text-lg">
               {job.deadline ? `Apply by ${formatDate(job.deadline)}` : 'Open until filled'}
             </span>
           </div>
         </div>
 
         {/* Description */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+        <p className="text-gray-600 text-base sm:text-lg mb-4 line-clamp-3">
           {job.shortDescription || job.description}
         </p>
 
@@ -205,13 +205,13 @@ const JobCard = ({ job }) => {
             {job.requirements.skills.slice(0, 4).map((skill, index) => (
               <span 
                 key={index}
-                className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-md capitalize"
+                className="px-2 py-1 bg-blue-50 text-blue-700 text-base rounded-md capitalize"
               >
                 {skill.name}
               </span>
             ))}
             {job.requirements.skills.length > 4 && (
-              <span className="px-2 py-1 bg-gray-50 text-gray-600 text-xs rounded-md">
+              <span className="px-2 py-1 bg-gray-50 text-gray-600 text-base rounded-md">
                 +{job.requirements.skills.length - 4} more
               </span>
             )}
@@ -239,7 +239,7 @@ const JobCard = ({ job }) => {
           <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
             <Link
               to={`/jobs/${job._id}`}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-center"
+              className="px-4 py-2 text-base sm:text-lg font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-center"
             >
               View Details
             </Link>
@@ -248,7 +248,7 @@ const JobCard = ({ job }) => {
               <button
                 onClick={handleQuickApply}
                 disabled={isApplying || (user.role === 'job_seeker' && monthlyUsage?.applications >= 5)}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-4 py-2 text-base sm:text-lg font-medium rounded-lg transition-colors ${
                   user.role === 'job_seeker' && monthlyUsage?.applications >= 5
                     ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
                     : 'text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed'
