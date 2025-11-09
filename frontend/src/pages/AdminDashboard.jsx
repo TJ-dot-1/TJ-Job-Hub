@@ -233,7 +233,7 @@ const AdminDashboard = () => {
 
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           <div className="bg-gray-800 p-6 rounded-lg">
             <h3 className="text-lg font-semibold text-white mb-2">Total Users</h3>
             <p className="text-3xl font-bold text-blue-400">{analytics?.data?.totalUsers || 0}</p>
@@ -298,7 +298,7 @@ const AdminDashboard = () => {
 
     return (
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col gap-4">
           <form onSubmit={handleSearch} className="flex-1">
             <input
               type="text"
@@ -416,7 +416,7 @@ const AdminDashboard = () => {
 
     return (
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col gap-4">
           <form onSubmit={handleSearch} className="flex-1">
             <input
               type="text"
@@ -518,7 +518,7 @@ const AdminDashboard = () => {
     return (
       <div className="space-y-6">
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           <div className="bg-gray-800 p-6 rounded-lg">
             <h3 className="text-lg font-semibold text-white mb-2">Total Feedback</h3>
             <p className="text-3xl font-bold text-blue-400">{feedbackData?.data?.pagination?.total || 0}</p>
@@ -536,7 +536,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Search and Filters */}
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col gap-4">
           <form onSubmit={handleSearch} className="flex-1">
             <input
               type="text"
@@ -872,7 +872,7 @@ const AdminDashboard = () => {
         <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
 
         {/* Navigation Tabs */}
-        <div className="flex space-x-1 mb-8 bg-gray-800 p-1 rounded-lg">
+        <div className="flex overflow-x-auto space-x-4 mb-8 bg-gray-800 p-1 rounded-lg scrollbar-hide">
           {[
             { id: 'overview', label: 'Overview' },
             { id: 'users', label: 'Users' },

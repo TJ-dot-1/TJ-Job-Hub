@@ -417,7 +417,7 @@ const Dashboard = () => {
         ) : (
           <>
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -489,7 +489,7 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm mb-8">
           <div className="border-b border-gray-200 dark:border-gray-700">
-            <nav className="flex space-x-8 px-6">
+            <nav className="flex overflow-x-auto space-x-4 px-6 scrollbar-hide">
               {[
                 { id: 'overview', name: 'Overview', icon: BarChart3 },
                 ...(isEmployer ? [
@@ -623,7 +623,7 @@ const Dashboard = () => {
                     </button>
                   </div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 gap-4 sm:gap-6">
                     {activeJobs.length > 0 ? activeJobs.map((job) => (
                       <div key={job._id} className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-6 hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start mb-4">
@@ -804,11 +804,11 @@ const Dashboard = () => {
             {/* Applications Tab */}
             {activeTab === 'applications' && (
               <div>
-                <div className="flex justify-between items-center mb-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                     Applications
                   </h2>
-                  <div className="flex space-x-3">
+                  <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                     <div className="relative">
                       <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                       <input
@@ -822,7 +822,7 @@ const Dashboard = () => {
                     <select
                       value={statusFilter}
                       onChange={handleStatusFilter}
-                      className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto"
                     >
                       <option value="">All Status</option>
                       <option value="pending">Pending</option>
@@ -834,7 +834,7 @@ const Dashboard = () => {
                     <select
                       value={jobFilter}
                       onChange={handleJobFilter}
-                      className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto"
                     >
                       <option value="">All Jobs</option>
                       {allJobs.map(job => (
@@ -987,7 +987,7 @@ const Dashboard = () => {
                                 )}
                                 <button
                                   onClick={() => handleViewApplicant(application)}
-                                  className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700 transition-colors"
+                                  className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700 transition-colors w-full sm:w-auto"
                                 >
                                   View
                                 </button>
