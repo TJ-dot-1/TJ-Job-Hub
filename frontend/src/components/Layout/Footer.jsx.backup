@@ -1,0 +1,77 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Briefcase, Heart } from 'lucide-react';
+
+const Footer = () => {
+  return (
+    <footer className="bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Brand */}
+          <div className="col-span-1">
+            <Link to="/" className="flex items-center space-x-2 mb-4">
+              <img
+                src="/ted.jpg"
+                alt="TJ Jobs Logo"
+                className="w-10 h-10 rounded-lg object-cover"
+              />
+              <span className="text-xl font-bold">TJ Job Portal</span>
+            </Link>
+            <p className="text-gray-400 mb-4">
+              Empowering decent work through digital innovation. Connecting talent with opportunities worldwide.
+            </p>
+            <div className="flex space-x-4">
+              {/* Social links would go here */}
+            </div>
+          </div>
+
+          {/* For Job Seekers */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">For Job Seekers</h3>
+            <ul className="space-y-2 text-gray-400">
+              <li><Link to="/jobs" className="hover:text-white transition-colors">Browse Jobs</Link></li>
+              <li><Link to="/companies" className="hover:text-white transition-colors">Companies</Link></li>
+              <li><Link to="/assessments" className="hover:text-white transition-colors">Skill Assessments</Link></li>
+              <li><Link to="/career-advice" className="hover:text-white transition-colors">Career Advice</Link></li>
+            </ul>
+          </div>
+
+          {/* For Employers */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">For Employers</h3>
+            <ul className="space-y-2 text-gray-400">
+              <li><Link to="/post-job" className="hover:text-white transition-colors">Post a Job</Link></li>
+              <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+              <li><Link to="/recruit" className="hover:text-white transition-colors">Recruit</Link></li>
+              <li><Link to="/dashboard" className="hover:text-white transition-colors">Employer Dashboard</Link></li>
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Company</h3>
+            <ul className="space-y-2 text-gray-400">
+              <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+              <li><Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-gray-400 text-sm">
+            © 2025 TJ Job Portal. All rights reserved.
+          </p>
+          <div className="flex items-center space-x-2 mt-4 md:mt-0">
+            <span className="text-gray-400 text-sm">Made with</span>
+            <Heart className="w-4 h-4 text-red-500" />
+            <span className="text-gray-400 text-sm">for a better world</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
