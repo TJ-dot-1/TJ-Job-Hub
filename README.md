@@ -3,11 +3,12 @@
 
  LIVE LINK: https://tj-job-hub.vercel.app
  
- https://img.shields.io/badge/MERN-Stack-green
- https://img.shields.io/badge/React-18.2.0-blue
- https://img.shields.io/badge/Node.js-18+-green
- https://img.shields.io/badge/MongoDB-7.5+-brown
- https://img.shields.io/badge/license-MIT-orange
+ ![MERN](https://img.shields.io/badge/MERN-Stack-green)
+![React](https://img.shields.io/badge/React-18.2.0-blue)
+![Node.js](https://img.shields.io/badge/Node.js-18+-green)
+![MongoDB](https://img.shields.io/badge/MongoDB-7.5+-brown)
+![License](https://img.shields.io/badge/license-MIT-orange)
+
  
  A modern, AI-enhanced job portal built with the MERN stack that connects job seekers with employers. Features real-time messaging, AI-powered CV optimization, career assistance, and comprehensive job management tools.
 ## ✨ Key Features
