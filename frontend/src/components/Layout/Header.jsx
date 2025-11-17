@@ -22,7 +22,7 @@ const Header = () => {
               alt="TJ Jobs Logo"
               className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg object-cover"
             />
-            <span className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">TJ Jobs</span>
+            <span className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Jobs</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -89,13 +89,13 @@ const Header = () => {
                   to="/login"
                   className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm sm:text-base"
                 >
-                  Sign In
+                  Log In
                 </Link>
                 <Link
                   to="/register"
                   className="bg-blue-600 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
                 >
-                  Get Started
+                  Sign Up
                 </Link>
               </div>
             )}
