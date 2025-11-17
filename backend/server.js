@@ -24,9 +24,7 @@ const io = new SocketIO(server, {
     origin: [
       'http://localhost:3000',
       'http://localhost:3002',
-      'https://tj-job-hub.vercel.app',
-      'https://tj-job-hub-nhfn.vercel.app'
-    ],
+      'https://tj-job-hub.vercel.app',    ],
     methods: ["GET", "POST"],
     credentials: true
   },
