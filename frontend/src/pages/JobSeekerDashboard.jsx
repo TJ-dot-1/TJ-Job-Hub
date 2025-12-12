@@ -74,11 +74,11 @@ const JobSeekerDashboard = () => {
         setRecommendedJobs(recommendedResponse.data.jobs);
       }
 
-      // Fetch notifications
-      const notificationsResponse = await api.get('/notifications');
-      if (notificationsResponse.data.success) {
-        setNotifications(notificationsResponse.data.notifications);
-      }
+      // Fetch notifications - temporarily disabled as backend route not implemented
+      // const notificationsResponse = await api.get('/notifications');
+      // if (notificationsResponse.data.success) {
+      //   setNotifications(notificationsResponse.data.notifications);
+      // }
 
       // Fetch saved jobs
       const savedResponse = await api.get('/jobs/saved');

@@ -210,7 +210,6 @@ app.use('/api/employer', (await import('./routes/employer.js')).default);
 app.use('/api/chat', (await import('./routes/chat.js')).default);
 app.use('/api/messages', (await import('./routes/messages.js')).default);
 app.use('/api/profile', (await import('./routes/profile.js')).default);
-app.use('/api/notifications', (await import('./routes/notifications.js')).default);
 app.use('/api/subscription', (await import('./routes/subscription.js')).default);
 app.use('/api/feedback', (await import('./routes/feedback.js')).default);
 app.use('/api/admin', (await import('./routes/admin.js')).default);

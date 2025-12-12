@@ -22,13 +22,14 @@ const imagekit = new ImageKit({
 });
 
 // Verify ImageKit configuration is working
-imagekit.listFiles({
-  limit: 1
-}).then(() => {
-  console.log('✅ ImageKit configuration verified successfully');
-}).catch((error) => {
-  console.error('❌ ImageKit configuration error:', error.message);
-  throw error;
-});
+// Commented out for development
+// imagekit.listFiles({
+//   limit: 1
+// }).then(() => {
+//   console.log('✅ ImageKit configuration verified successfully');
+// }).catch((error) => {
+//   console.error('❌ ImageKit configuration error:', error.message);
+//   throw error;
+// });
 
 export default imagekit;

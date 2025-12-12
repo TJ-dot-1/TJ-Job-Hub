@@ -7,7 +7,6 @@ import User from '../models/User.js';
 import EmployerProfile from '../models/EmployerProfile.js';
 import imagekit from '../config/imagekit.js';
 import multer from 'multer';
-import { createNotification } from './notifications.js';
 
 // Configure multer for logo uploads
 const upload = multer({
@@ -452,27 +451,10 @@ router.put('/applications/:applicationId/status', verifyToken, requireRole(['emp
       { new: true }
     ).populate('job').populate('user');
 
-    // Create notification for job seeker
-    const notificationMessage = getStatusNotificationMessage(status, application.job.title, interviewDate);
-
-    // Create persistent notification in database
-    await createNotification(
-      application.user._id,
-      'application_status',
-      `Application Status Update - ${application.job.title}`,
-      notificationMessage,
-      {
-        applicationId: application._id,
-        jobId: application.job._id,
-        employerId: req.user.id,
-        status,
-        interviewDate: interviewDate || null
-      }
-    );
-
     // Emit real-time notification via Socket.IO
     const io = req.app.get('io');
     if (io) {
+      const notificationMessage = getStatusNotificationMessage(status, application.job.title, interviewDate);
       io.to(`user_${application.user._id}`).emit('application_status_update', {
         applicationId: application._id,
         status,

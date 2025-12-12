@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Check, Star, CreditCard, Loader } from 'lucide-react';
+import { Check, Star, CreditCard } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Pricing = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isPro } = useAuth();
-  const [loading, setLoading] = useState(false);
 
   const plans = [
     {
@@ -38,7 +37,7 @@ const Pricing = () => {
         'Unlimited career advice access',
         'Advanced AI matching',
         'Priority support',
-        '90-day job listings',
+        '30-day job listings',
         'Advanced analytics',
         'Resume optimization',
         'Interview preparation'
@@ -46,7 +45,7 @@ const Pricing = () => {
         'Unlimited job postings',
         'Advanced AI matching',
         'Priority support',
-        '90-day job listings',
+        '30-day job listings',
         'Advanced analytics',
         'Candidate messaging',
         'Custom branding',
@@ -66,7 +65,7 @@ const Pricing = () => {
         'Unlimited career advice access',
         'Advanced AI matching',
         'Priority support',
-        '90-day job listings',
+        '365-day job listings',
         'Advanced analytics',
         'Resume optimization',
         'Interview preparation',
@@ -75,7 +74,7 @@ const Pricing = () => {
         'Unlimited job postings',
         'Advanced AI matching',
         'Priority support',
-        '90-day job listings',
+        '365-day job listings',
         'Advanced analytics',
         'Candidate messaging',
         'Custom branding',
@@ -87,7 +86,7 @@ const Pricing = () => {
     }
   ];
 
-  const handleSubscribe = async (planType, interval) => {
+  const handleSubscribe = (planType, interval) => {
     if (!isAuthenticated) {
       navigate('/login');
       return;
@@ -98,31 +97,13 @@ const Pricing = () => {
       return;
     }
 
-    try {
-      setLoading(true);
-      const response = await fetch('/api/subscription/create-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ planType, interval })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-      } else {
-        toast.error(data.message || 'Failed to create subscription');
+    // Scroll to top and navigate to payment page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate('/payment', {
+      state: {
+        planDetails: { planType, interval }
       }
-    } catch (error) {
-      console.error('Subscription error:', error);
-      toast.error('Failed to process subscription');
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   const handleContactSales = () => {
@@ -194,7 +175,7 @@ const Pricing = () => {
                 {/* CTA Button */}
                 <button
                   onClick={plan.action}
-                  disabled={loading || (isPro && plan.name !== 'Free')}
+                  disabled={isPro && plan.name !== 'Free'}
                   className={`w-full py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center ${
                     plan.popular && !isPro
                       ? 'bg-blue-600 text-white hover:bg-blue-700'
@@ -203,12 +184,7 @@ const Pricing = () => {
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
-                  {loading ? (
-                    <>
-                      <Loader className="w-4 h-4 mr-2 animate-spin" />
-                      Processing...
-                    </>
-                  ) : isPro && plan.name !== 'Free' ? (
+                  {isPro && plan.name !== 'Free' ? (
                     <>
                       <Check className="w-4 h-4 mr-2" />
                       {plan.cta}

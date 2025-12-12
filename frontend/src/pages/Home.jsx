@@ -84,13 +84,13 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-8 sm:py-12 lg:py-16 bg-white dark:bg-gray-800">
+      <section className="py-8 sm:py-12 lg:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               Why Choose TJ Job Portal?
             </h2>
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto px-4">
               We're revolutionizing the job search experience with cutting-edge technology
               and a commitment to sustainable development goals.
             </p>
@@ -99,15 +99,15 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {features.map((feature, index) => (
               <div key={index} className="text-center p-4 sm:p-6">
-                <div className="bg-blue-100 dark:bg-blue-900 w-12 h-12 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                  <div className="text-blue-600 dark:text-blue-400">
+                <div className="bg-blue-100 w-12 h-12 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                  <div className="text-blue-600">
                     {feature.icon}
                   </div>
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">
+                <p className="text-gray-600 text-sm sm:text-base">
                   {feature.description}
                 </p>
               </div>

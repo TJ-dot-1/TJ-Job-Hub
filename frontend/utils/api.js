@@ -64,31 +64,15 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response) {
-      // Server responded with error status
-      const { status, data } = error.response;
-      
-      if (status === 401) {
-        // Unauthorized - redirect to login
-        if (window.Clerk) {
-          window.Clerk.signOut();
-        }
-        toast.error('Session expired. Please login again.');
-      } else if (status === 403) {
-        toast.error('Access denied. Insufficient permissions.');
-      } else if (status === 500) {
-        toast.error('Server error. Please try again later.');
-      } else if (data?.message) {
-        toast.error(data.message);
+    // Only show toast for authentication errors, let components handle other errors
+    if (error.response?.status === 401) {
+      // Unauthorized - redirect to login
+      if (window.Clerk) {
+        window.Clerk.signOut();
       }
-    } else if (error.request) {
-      // Network error
-      toast.error('Network error. Please check your connection.');
-    } else {
-      // Other error
-      toast.error('An unexpected error occurred.');
+      toast.error('Session expired. Please login again.');
     }
-    
+
     return Promise.reject(error);
   }
 );

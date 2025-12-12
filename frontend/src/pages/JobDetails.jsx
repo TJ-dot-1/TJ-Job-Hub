@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import {
@@ -38,6 +38,11 @@ const JobDetails = () => {
     }
   );
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const fetchJob = async (jobId) => {
     const response = await api.get(`/jobs/${jobId}`);
     return response.data.data;
@@ -66,7 +71,7 @@ const JobDetails = () => {
     } catch (error) {
       console.error('Apply error:', error);
       if (error.response?.status === 400) {
-        toast.error('You have already applied for this job');
+        toast.error(error.response.data?.message || 'You have already applied for this job');
       } else {
         toast.error('Failed to submit application. Please try again.');
       }

@@ -119,7 +119,7 @@ const JobCard = ({ job }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-200">
       <div className="p-6">
         {/* Header */}
         <div className="flex justify-between items-start mb-4">
@@ -127,7 +127,7 @@ const JobCard = ({ job }) => {
         <div className="flex items-center justify-between mb-2">
               <Link
                 to={`/jobs/${job._id}`}
-                className="text-xl sm:text-2xl font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2"
+                className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors line-clamp-2"
               >
                 {job.title}
               </Link>
@@ -135,25 +135,25 @@ const JobCard = ({ job }) => {
                 <button
                   onClick={handleSaveJob}
                   className={`p-2 rounded-lg transition-colors ${
-                    isSaved 
-                      ? 'bg-red-50 text-red-600 hover:bg-red-100' 
-                      : 'bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-600'
+                    isSaved
+                      ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30'
+                      : 'bg-gray-50 dark:bg-gray-700 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-600 dark:hover:text-gray-300'
                   }`}
                 >
                   <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
                 </button>
                 <button
                   onClick={handleShare}
-                  className="p-2 rounded-lg bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+                  className="p-2 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 >
                   <Share2 className="w-4 h-4" />
                 </button>
               </div>
             </div>
-            
-            <Link 
+
+            <Link
               to={`/companies/${job.company?._id}`}
-              className="flex items-center text-gray-600 hover:text-blue-600 transition-colors mb-3"
+              className="flex items-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-3"
             >
               <Building className="w-4 h-4 mr-2" />
               <span className="font-medium">{job.company?.name}</span>
@@ -171,22 +171,22 @@ const JobCard = ({ job }) => {
 
         {/* Job Details */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4">
-          <div className="flex items-center text-gray-600">
+          <div className="flex items-center text-gray-600 dark:text-gray-300">
             <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
             <span className="text-base sm:text-lg">{job.location}</span>
           </div>
-          
-          <div className="flex items-center text-gray-600">
+
+          <div className="flex items-center text-gray-600 dark:text-gray-300">
             <Briefcase className="w-4 h-4 mr-2 flex-shrink-0" />
             <span className="text-base sm:text-lg capitalize">{job.jobType?.replace('-', ' ')}</span>
           </div>
-          
-          <div className="flex items-center text-gray-600">
+
+          <div className="flex items-center text-gray-600 dark:text-gray-300">
             <DollarSign className="w-4 h-4 mr-2 flex-shrink-0" />
             <span className="text-base sm:text-lg">{formatSalary(job.salary)}</span>
           </div>
-          
-          <div className="flex items-center text-gray-600">
+
+          <div className="flex items-center text-gray-600 dark:text-gray-300">
             <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
             <span className="text-base sm:text-lg">
               {job.deadline ? `Apply by ${formatDate(job.deadline)}` : 'Open until filled'}
@@ -195,7 +195,7 @@ const JobCard = ({ job }) => {
         </div>
 
         {/* Description */}
-        <p className="text-gray-600 text-base sm:text-lg mb-4 line-clamp-3">
+        <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg mb-4 line-clamp-3">
           {job.shortDescription || job.description}
         </p>
 
@@ -203,15 +203,15 @@ const JobCard = ({ job }) => {
         {job.requirements?.skills && job.requirements.skills.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
             {job.requirements.skills.slice(0, 4).map((skill, index) => (
-              <span 
+              <span
                 key={index}
-                className="px-2 py-1 bg-blue-50 text-blue-700 text-base rounded-md capitalize"
+                className="px-2 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-base rounded-md capitalize"
               >
                 {skill.name}
               </span>
             ))}
             {job.requirements.skills.length > 4 && (
-              <span className="px-2 py-1 bg-gray-50 text-gray-600 text-base rounded-md">
+              <span className="px-2 py-1 bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-base rounded-md">
                 +{job.requirements.skills.length - 4} more
               </span>
             )}
@@ -219,8 +219,8 @@ const JobCard = ({ job }) => {
         )}
 
         {/* Footer */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pt-4 border-t border-gray-100 gap-4 sm:gap-0">
-          <div className="flex flex-wrap items-center text-xs text-gray-500 gap-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pt-4 border-t border-gray-100 dark:border-gray-700 gap-4 sm:gap-0">
+          <div className="flex flex-wrap items-center text-xs text-gray-500 dark:text-gray-400 gap-2">
             <span>Posted {formatDate(job.postedAt)}</span>
             {job.metadata?.views > 0 && (
               <>
@@ -239,7 +239,7 @@ const JobCard = ({ job }) => {
           <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
             <Link
               to={`/jobs/${job._id}`}
-              className="px-4 py-2 text-base sm:text-lg font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-center"
+              className="px-4 py-2 text-base sm:text-lg font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-center"
             >
               View Details
             </Link>
@@ -250,7 +250,7 @@ const JobCard = ({ job }) => {
                 disabled={isApplying || (user.role === 'job_seeker' && monthlyUsage?.applications >= 5)}
                 className={`px-4 py-2 text-base sm:text-lg font-medium rounded-lg transition-colors ${
                   user.role === 'job_seeker' && monthlyUsage?.applications >= 5
-                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                    ? 'bg-gray-400 dark:bg-gray-600 text-gray-200 dark:text-gray-400 cursor-not-allowed'
                     : 'text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed'
                 }`}
                 title={user.role === 'job_seeker' && monthlyUsage?.applications >= 5 ? 'Monthly limit reached. Upgrade to Pro.' : ''}

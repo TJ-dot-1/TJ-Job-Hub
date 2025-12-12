@@ -124,7 +124,7 @@ router.post('/register', registerValidation, async (req, res) => {
     console.error('Registration error:', error);
     res.status(500).json({
       success: false,
-      message: 'Internal server error during registration'
+      message: 'Registration Failed'
     });
   }
 });

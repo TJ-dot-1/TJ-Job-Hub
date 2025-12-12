@@ -74,7 +74,7 @@ const Footer = () => {
                 alt="TJ Jobs Logo"
                 className="w-10 h-10 rounded-lg object-cover"
               />
-              <span className="text-xl font-bold">TJ Job Portal</span>
+              <span className="text-xl font-bold">Job Hub</span>
             </Link>
             <p className="text-gray-400 mb-4">
               Empowering decent work through digital innovation. Connecting talent with opportunities worldwide.

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { Filter, MapPin, Briefcase, DollarSign, Clock, Building } from 'lucide-react';
@@ -20,6 +20,11 @@ const JobListings = () => {
     experience: searchParams.get('experience') || '',
     page: parseInt(searchParams.get('page')) || 1
   });
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const { data, isLoading, error } = useQuery(
     ['jobs', filters],
@@ -58,7 +63,7 @@ const JobListings = () => {
   const handleSearch = (newFilters) => {
     const updatedFilters = { ...newFilters, page: 1 };
     setFilters(updatedFilters);
-    
+
     // Update URL params
     const params = new URLSearchParams();
     Object.entries(updatedFilters).forEach(([key, value]) => {
@@ -67,6 +72,9 @@ const JobListings = () => {
       }
     });
     setSearchParams(params);
+
+    // Scroll to top when search changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handlePageChange = (newPage) => {
@@ -86,13 +94,13 @@ const JobListings = () => {
   };
 
   const handleFilterChange = (key, value) => {
-    const updatedFilters = { 
-      ...filters, 
+    const updatedFilters = {
+      ...filters,
       [key]: value,
       page: 1 // Reset to first page when filters change
     };
     setFilters(updatedFilters);
-    
+
     const params = new URLSearchParams();
     Object.entries(updatedFilters).forEach(([filterKey, filterValue]) => {
       if (filterValue && filterValue !== '') {
@@ -100,15 +108,18 @@ const JobListings = () => {
       }
     });
     setSearchParams(params);
+
+    // Scroll to top when filters change
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <Briefcase className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Error loading jobs</h2>
-          <p className="text-gray-600 mb-4">{error.message}</p>
+          <Briefcase className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error loading jobs</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">{error.message}</p>
           <button
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -121,15 +132,15 @@ const JobListings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Subscription Status */}
         <SubscriptionStatus />
 
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Find Your Dream Job</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Find Your Dream Job</h1>
+          <p className="text-gray-600 dark:text-gray-300 mt-2">
             Discover {data?.total || 0} job opportunities that match your skills and aspirations
           </p>
         </div>
@@ -141,16 +152,16 @@ const JobListings = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Sidebar Filters */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sticky top-8">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <Filter className="w-5 h-5 mr-2" />
                 Quick Filters
               </h3>
-              
+
               <div className="space-y-6">
                 {/* Job Type Filter */}
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-3">Job Type</h4>
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-3">Job Type</h4>
                   <div className="space-y-2">
                     {['full-time', 'part-time', 'contract', 'internship', 'freelance'].map(type => (
                       <label key={type} className="flex items-center">
@@ -159,9 +170,9 @@ const JobListings = () => {
                           name="jobType"
                           checked={filters.jobType === type}
                           onChange={() => handleFilterChange('jobType', filters.jobType === type ? '' : type)}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700"
                         />
-                        <span className="ml-2 text-sm text-gray-700 capitalize">
+                        <span className="ml-2 text-sm text-gray-700 dark:text-gray-300 capitalize">
                           {type.replace('-', ' ')}
                         </span>
                       </label>
@@ -171,7 +182,7 @@ const JobListings = () => {
 
                 {/* Remote Policy Filter */}
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-3">Remote Policy</h4>
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-3">Remote Policy</h4>
                   <div className="space-y-2">
                     {['remote', 'hybrid', 'on-site'].map(policy => (
                       <label key={policy} className="flex items-center">
@@ -180,9 +191,9 @@ const JobListings = () => {
                           name="remotePolicy"
                           checked={filters.remotePolicy === policy}
                           onChange={() => handleFilterChange('remotePolicy', filters.remotePolicy === policy ? '' : policy)}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700"
                         />
-                        <span className="ml-2 text-sm text-gray-700 capitalize">
+                        <span className="ml-2 text-sm text-gray-700 dark:text-gray-300 capitalize">
                           {policy.replace('-', ' ')}
                         </span>
                       </label>
@@ -198,7 +209,7 @@ const JobListings = () => {
                       location: filters.location,
                       page: 1
                     })}
-                    className="w-full px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                    className="w-full px-4 py-2 text-sm text-blue-600 dark:text-blue-400 border border-blue-600 dark:border-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                   >
                     Clear Filters
                   </button>
@@ -217,7 +228,7 @@ const JobListings = () => {
               <>
                 {/* Results Info */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-4 sm:gap-0">
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 dark:text-gray-300">
                     Showing {data?.jobs?.length || 0} of {data?.total || 0} jobs
                     {filters.query && ` for "${filters.query}"`}
                     {filters.location && ` in ${filters.location}`}
@@ -232,10 +243,10 @@ const JobListings = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-12 bg-white rounded-lg">
-                    <Briefcase className="mx-auto h-12 w-12 text-gray-400" />
-                    <h3 className="mt-4 text-lg font-medium text-gray-900">No jobs found</h3>
-                    <p className="mt-2 text-gray-600 mb-4">
+                  <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg">
+                    <Briefcase className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                    <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">No jobs found</h3>
+                    <p className="mt-2 text-gray-600 dark:text-gray-300 mb-4">
                       Try adjusting your search criteria or browse all jobs.
                     </p>
                     <button
@@ -254,11 +265,11 @@ const JobListings = () => {
                       <button
                         onClick={() => handlePageChange(filters.page - 1)}
                         disabled={filters.page <= 1}
-                        className="px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                       >
                         Previous
                       </button>
-                      
+
                       {[...Array(data.totalPages)].map((_, index) => {
                         const pageNumber = index + 1;
                         // Show limited pages with ellipsis
@@ -274,22 +285,22 @@ const JobListings = () => {
                               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                                 filters.page === pageNumber
                                   ? 'bg-blue-600 text-white'
-                                  : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                                  : 'border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                               }`}
                             >
                               {pageNumber}
                             </button>
                           );
                         } else if (pageNumber === filters.page - 2 || pageNumber === filters.page + 2) {
-                          return <span key={pageNumber} className="px-2 text-gray-500">...</span>;
+                          return <span key={pageNumber} className="px-2 text-gray-500 dark:text-gray-400">...</span>;
                         }
                         return null;
                       })}
-                      
+
                       <button
                         onClick={() => handlePageChange(filters.page + 1)}
                         disabled={filters.page >= data.totalPages}
-                        className="px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                       >
                         Next
                       </button>

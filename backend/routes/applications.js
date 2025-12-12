@@ -48,6 +48,14 @@ router.post('/', verifyToken, requireRole(['job_seeker']), async (req, res) => {
       });
     }
 
+    // Check if job requires resume and user has one
+    if (job.applicationProcess?.requiresResume && !req.user.profile?.resume) {
+      return res.status(400).json({
+        success: false,
+        message: 'This job requires a resume. Please upload your resume to your profile before applying.'
+      });
+    }
+
     // Check subscription limits
     const permission = req.user.canPerformAction('apply');
     if (!permission.allowed) {

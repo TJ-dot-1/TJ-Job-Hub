@@ -36,20 +36,15 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     console.log('API Error:', error.response?.status, error.config?.url);
-    
+
+    // Only show toast for authentication errors, let components handle other errors
     if (error.response?.status === 401) {
       // Don't auto-signout, just show message
       toast.error('Please sign in to continue');
       // Redirect to login page
       window.location.href = '/login';
-    } else if (error.response?.status === 500) {
-      toast.error('Server error. Please try again later.');
-    } else if (error.request) {
-      toast.error('Network error. Please check your connection.');
-    } else if (error.response?.data?.message) {
-      toast.error(error.response.data.message);
     }
-    
+
     return Promise.reject(error);
   }
 );
