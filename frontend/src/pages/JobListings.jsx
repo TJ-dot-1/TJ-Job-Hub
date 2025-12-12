@@ -163,13 +163,23 @@ const JobListings = () => {
                 <div>
                   <h4 className="font-medium text-gray-900 dark:text-white mb-3">Job Type</h4>
                   <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="jobType"
+                        checked={filters.jobType === ''}
+                        onChange={() => handleFilterChange('jobType', '')}
+                        className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700"
+                      />
+                      <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">Any</span>
+                    </label>
                     {['full-time', 'part-time', 'contract', 'internship', 'freelance'].map(type => (
                       <label key={type} className="flex items-center">
                         <input
                           type="radio"
                           name="jobType"
                           checked={filters.jobType === type}
-                          onChange={() => handleFilterChange('jobType', filters.jobType === type ? '' : type)}
+                          onChange={() => handleFilterChange('jobType', type)}
                           className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700"
                         />
                         <span className="ml-2 text-sm text-gray-700 dark:text-gray-300 capitalize">
@@ -184,13 +194,23 @@ const JobListings = () => {
                 <div>
                   <h4 className="font-medium text-gray-900 dark:text-white mb-3">Remote Policy</h4>
                   <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="remotePolicy"
+                        checked={filters.remotePolicy === ''}
+                        onChange={() => handleFilterChange('remotePolicy', '')}
+                        className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700"
+                      />
+                      <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">Any</span>
+                    </label>
                     {['remote', 'hybrid', 'on-site'].map(policy => (
                       <label key={policy} className="flex items-center">
                         <input
                           type="radio"
                           name="remotePolicy"
                           checked={filters.remotePolicy === policy}
-                          onChange={() => handleFilterChange('remotePolicy', filters.remotePolicy === policy ? '' : policy)}
+                          onChange={() => handleFilterChange('remotePolicy', policy)}
                           className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700"
                         />
                         <span className="ml-2 text-sm text-gray-700 dark:text-gray-300 capitalize">
@@ -202,11 +222,16 @@ const JobListings = () => {
                 </div>
 
                 {/* Clear Filters */}
-                {(filters.jobType || filters.remotePolicy || filters.category) && (
+                {(filters.jobType || filters.remotePolicy || filters.category || filters.minSalary || filters.experience) && (
                   <button
                     onClick={() => handleSearch({
                       query: filters.query,
                       location: filters.location,
+                      category: '',
+                      jobType: '',
+                      remotePolicy: '',
+                      minSalary: '',
+                      experience: '',
                       page: 1
                     })}
                     className="w-full px-4 py-2 text-sm text-blue-600 dark:text-blue-400 border border-blue-600 dark:border-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"

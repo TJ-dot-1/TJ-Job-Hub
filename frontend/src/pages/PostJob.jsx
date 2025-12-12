@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import api from '../utils/api';
 
 const PostJob = () => {
-  const { user, isEmployer, isAuthenticated, monthlyUsage } = useAuth();
+  const { user, isEmployer, isAuthenticated, monthlyUsage, checkAuth } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -234,9 +234,13 @@ const PostJob = () => {
 
       // Make the actual API call
       const response = await api.post('/jobs', cleanedJobData);
-      
+
       if (response.data.success) {
         toast.success('Job posted successfully!');
+
+        // Refresh user data to update subscription usage
+        await checkAuth();
+
         navigate('/jobs');
       } else {
         throw new Error(response.data.message || 'Failed to post job');

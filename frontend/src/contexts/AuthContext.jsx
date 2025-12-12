@@ -68,14 +68,13 @@ export const AuthProvider = ({ children }) => {
         targetPath = '/admin';
       }
 
-      // Only redirect if user is on auth pages or home page
+      // Only redirect if user is on auth pages
       const authPages = ['/login', '/register'];
       const isOnAuthPage = authPages.some(page => currentPath.includes(page));
-      const isOnHomePage = currentPath === '/';
 
       const shouldNavigate =
         !hasNavigated.current &&
-        (isOnAuthPage || isOnHomePage) &&
+        isOnAuthPage &&
         currentPath !== targetPath;
 
       if (shouldNavigate) {

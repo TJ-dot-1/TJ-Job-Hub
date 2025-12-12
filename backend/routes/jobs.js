@@ -180,12 +180,15 @@ router.get('/', async (req, res) => {
 
     // Text search across multiple fields
     if (query) {
-      filter.$or = [
-        { title: { $regex: query, $options: 'i' } },
-        { description: { $regex: query, $options: 'i' } },
-        { 'requirements.skills.name': { $regex: query, $options: 'i' } },
-        { 'companyDetails.name': { $regex: query, $options: 'i' } }
-      ];
+      filter.$and = filter.$and || [];
+      filter.$and.push({
+        $or: [
+          { title: { $regex: query, $options: 'i' } },
+          { description: { $regex: query, $options: 'i' } },
+          { 'requirements.skills.name': { $regex: query, $options: 'i' } },
+          { 'companyDetails.name': { $regex: query, $options: 'i' } }
+        ]
+      });
     }
 
     // Location filter
@@ -210,18 +213,24 @@ router.get('/', async (req, res) => {
 
     // Minimum salary filter
     if (minSalary) {
-      filter.$or = [
-        { 'salary.min': { $gte: Number(minSalary) } },
-        { 'salary.max': { $gte: Number(minSalary) } }
-      ];
+      filter.$and = filter.$and || [];
+      filter.$and.push({
+        $or: [
+          { 'salary.min': { $gte: Number(minSalary) } },
+          { 'salary.max': { $gte: Number(minSalary) } }
+        ]
+      });
     }
 
     // Experience filter
     if (experience) {
-      filter.$or = [
-        { 'requirements.experience.min': { $lte: Number(experience) } },
-        { 'requirements.experience.max': { $gte: Number(experience) } }
-      ];
+      filter.$and = filter.$and || [];
+      filter.$and.push({
+        $or: [
+          { 'requirements.experience.min': { $lte: Number(experience) } },
+          { 'requirements.experience.max': { $gte: Number(experience) } }
+        ]
+      });
     }
 
     // Ensure jobs haven't expired
@@ -366,11 +375,14 @@ router.get('/recommended', verifyToken, requireRole(['job_seeker']), async (req,
     }
 
     // Ensure jobs haven't expired
-    filter.$or = [
-      { expiresAt: { $exists: false } },
-      { expiresAt: { $gt: new Date() } },
-      { expiresAt: null }
-    ];
+    filter.$and = filter.$and || [];
+    filter.$and.push({
+      $or: [
+        { expiresAt: { $exists: false } },
+        { expiresAt: { $gt: new Date() } },
+        { expiresAt: null }
+      ]
+    });
 
     // Get recommended jobs
     const recommendedJobs = await Job.find(filter)

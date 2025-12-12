@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Filter, MapPin, Briefcase, DollarSign } from 'lucide-react';
 
 const JobSearch = ({ onSearch, initialFilters = {} }) => {
@@ -9,8 +9,17 @@ const JobSearch = ({ onSearch, initialFilters = {} }) => {
     jobType: initialFilters.jobType || '',
     remotePolicy: initialFilters.remotePolicy || '',
     minSalary: initialFilters.minSalary || '',
+    experience: initialFilters.experience || '',
     ...initialFilters
   });
+
+  // Update filters when initialFilters change (e.g., from URL or sidebar changes)
+  useEffect(() => {
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      ...initialFilters
+    }));
+  }, [initialFilters]);
   
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -35,7 +44,8 @@ const JobSearch = ({ onSearch, initialFilters = {} }) => {
       category: '',
       jobType: '',
       remotePolicy: '',
-      minSalary: ''
+      minSalary: '',
+      experience: ''
     };
     setFilters(clearedFilters);
     onSearch(clearedFilters);
@@ -60,7 +70,7 @@ const JobSearch = ({ onSearch, initialFilters = {} }) => {
               />
             </div>
           </div>
-          
+
           {/* Location */}
           <div className="md:col-span-3">
             <div className="relative">
@@ -77,7 +87,7 @@ const JobSearch = ({ onSearch, initialFilters = {} }) => {
           </div>
 
           {/* Category */}
-          <div className="md:col-span-3">
+          <div className="md:col-span-2">
             <select
               name="category"
               value={filters.category}
@@ -93,15 +103,25 @@ const JobSearch = ({ onSearch, initialFilters = {} }) => {
             </select>
           </div>
 
-          {/* Filters Button */}
+          {/* Search Button */}
           <div className="md:col-span-2">
+            <button
+              type="submit"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-xl transition-colors"
+            >
+              <Search className="w-4 h-4" />
+              Search
+            </button>
+          </div>
+
+          {/* Filters Button */}
+          <div className="md:col-span-1">
             <button
               type="button"
               onClick={() => setShowAdvanced(!showAdvanced)}
               className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 rounded-xl transition-colors"
             >
               <Filter className="w-4 h-4" />
-              Filters
             </button>
           </div>
         </div>

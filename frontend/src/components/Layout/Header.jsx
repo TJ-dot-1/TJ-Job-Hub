@@ -42,6 +42,52 @@ const Header = () => {
 
           {/* Right side */}
           <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* Desktop Auth Buttons */}
+            <div className="hidden md:flex items-center space-x-4">
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    to="/profile"
+                    className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
+                  >
+                    {user?.profile?.avatar ? (
+                      <img
+                        src={getProfileImageUrl(user.profile.avatar)}
+                        alt={user?.name || 'Profile'}
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
+                    ) : user?.name ? (
+                      <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-sm">
+                        {user.name.split(' ').map(s => s[0]).slice(0,2).join('').toUpperCase()}
+                      </div>
+                    ) : (
+                      <User className="w-5 h-5" />
+                    )}
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="text-gray-600 hover:text-red-600 transition-colors text-sm lg:text-base"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="text-gray-600 hover:text-blue-600 transition-colors text-sm lg:text-base"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm lg:text-base"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
+            </div>
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}

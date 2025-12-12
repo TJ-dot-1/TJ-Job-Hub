@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import api from '../../utils/api';
 
 const JobCard = ({ job }) => {
-  const { isAuthenticated, user, monthlyUsage } = useAuth();
+  const { isAuthenticated, user, monthlyUsage, checkAuth } = useAuth();
   const [isSaved, setIsSaved] = useState(job.isSaved || false);
   const [isApplying, setIsApplying] = useState(false);
 
@@ -80,6 +80,9 @@ const JobCard = ({ job }) => {
       });
 
       toast.success('Application submitted successfully!');
+
+      // Refresh user data to update subscription usage
+      await checkAuth();
     } catch (error) {
       // Use error for debugging and user feedback
       console.error('Quick apply error:', error);

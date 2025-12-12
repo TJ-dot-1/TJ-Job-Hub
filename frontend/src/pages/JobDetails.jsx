@@ -25,7 +25,7 @@ import CompanyProfileView from '../components/CompanyProfileView';
 const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, checkAuth } = useAuth();
   const [isApplying, setIsApplying] = useState(false);
   const [showCompanyProfile, setShowCompanyProfile] = useState(false);
 
@@ -68,6 +68,9 @@ const JobDetails = () => {
       });
 
       toast.success('Application submitted successfully!');
+
+      // Refresh user data to update subscription usage
+      await checkAuth();
     } catch (error) {
       console.error('Apply error:', error);
       if (error.response?.status === 400) {

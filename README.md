@@ -15,6 +15,8 @@
 - **Career Assistant** - Personalized career guidance and advice
 - **Interview Preparation** - AI-generated interview questions and tips
 - **Recruiter Assistant** - AI tools for employers to streamline hiring
+- **Job Recommendations** - AI-powered job matching based on profile
+- **Assessment Tools** - Skills assessment and career evaluation
 
 ### 💼 For Job Seekers
 - **Advanced Job Search** - Filter jobs by location, salary, type, and more
@@ -22,6 +24,9 @@
 - **Application Tracking** - Monitor application status and progress
 - **Real-time Messaging** - Direct communication with employers
 - **Dashboard Analytics** - Track job search progress and insights
+- **Saved Jobs** - Bookmark interesting job opportunities
+- **Company Reviews** - View and rate companies
+- **Career Resources** - Access to career advice and tips
 
 ### 🏢 For Employers
 - **Job Posting** - Create and manage job listings with detailed requirements
@@ -29,13 +34,25 @@
 - **Company Profile** - Build employer brand with company information
 - **Analytics Dashboard** - Track hiring metrics and performance
 - **Subscription Management** - Manage premium features and billing
+- **Bulk Messaging** - Communicate with multiple candidates
+- **Application Analytics** - Detailed insights into hiring funnel
 
 ### 🔄 Real-time Features
 - **Live Chat System** - Real-time messaging between users
 - **Instant Notifications** - Push notifications for important updates
 - **Socket.io Integration** - Real-time communication infrastructure
 
-## 📋 Table of Contents
+### 📊 Additional Features
+- **Admin Dashboard** - Comprehensive admin panel for system management
+- **Payment Integration** - Secure payment processing with Stripe
+- **Multi-role Authentication** - Support for job seekers, employers, and admins
+- **Responsive Design** - Mobile-first design with Tailwind CSS
+- **Progressive Web App** - PWA support for offline functionality
+- **PDF Generation** - Generate CVs and reports as PDFs
+- **Speech Recognition** - Voice search and commands
+- **Image Upload** - Profile pictures and document uploads with optimization
+
+## � Table of Contents
 - [Features](#-key-features)
 - [Tech Stack](#-tech-stack)
 - [Quick Start](#-quick-start)
@@ -50,16 +67,24 @@
 
 ### Frontend
 - **React 18** - Modern UI library with hooks and concurrent features
-- **Vite** - Fast build tool and development server
+- **Vite** - Fast build tool and development server with HMR
 - **Tailwind CSS** - Utility-first CSS framework for styling
-- **React Router** - Declarative routing for React applications
-- **React Query** - Powerful data synchronization for React
+- **React Router DOM** - Declarative routing for React applications
+- **TanStack Query** - Powerful data synchronization for React
 - **Socket.io Client** - Real-time bidirectional communication
 - **Framer Motion** - Production-ready motion library for React
 - **React Hook Form** - Performant forms with easy validation
 - **React Hot Toast** - Beautiful toast notifications
+- **React Error Boundary** - Error boundary component for React
+- **React Intersection Observer** - React implementation of the Intersection Observer API
+- **React Speech Recognition** - Speech recognition interface for React
 - **Lucide React** - Beautiful & consistent icon toolkit
 - **Recharts** - Composable charting library built on React components
+- **HTML2Canvas** - Screenshots with JavaScript
+- **jsPDF** - Client-side JavaScript PDF generation
+- **Date-fns** - Modern JavaScript date utility library
+- **Axios** - Promise based HTTP client for the browser
+- **Web Vitals** - Essential metrics for a healthy site
 
 ### Backend
 - **Node.js** - JavaScript runtime built on Chrome's V8 engine
@@ -68,18 +93,29 @@
 - **Mongoose** - Elegant MongoDB object modeling for Node.js
 - **JWT** - JSON Web Tokens for authentication
 - **bcryptjs** - Password hashing function
+- **Passport.js** - Authentication middleware for Node.js
 - **Socket.io** - Real-time bidirectional event-based communication
 - **Multer** - Middleware for handling multipart/form-data
 - **Nodemailer** - Easy as cake e-mail sending from Node.js
 - **Stripe** - Payment processing platform
-- **ImageKit** - Real-time image optimization and transformation
+- **ImageKit & Cloudinary** - Real-time image optimization and transformation
 - **OpenAI** - AI and machine learning platform
+- **Redis** - In-memory data structure store
+- **Elasticsearch** - Distributed search and analytics engine
+- **Node-cron** - Task scheduling for Node.js
+- **Helmet** - Security middleware for Express
+- **CORS** - Cross-Origin Resource Sharing middleware
+- **Express Rate Limit** - Rate limiting middleware
+- **Express Validator** - Middleware for validation and sanitization
+- **Compression** - Gzip compression middleware
+- **Moment.js** - Parse, validate, manipulate, and display dates
 
 ### DevOps & Deployment
 - **Vercel** - Frontend deployment platform
 - **Render** - Backend hosting and deployment
 - **MongoDB Atlas** - Cloud-hosted MongoDB service
 - **GitHub Actions** - CI/CD automation
+- **Vite PWA Plugin** - Progressive Web App support
 
 ## 🚀 Quick Start
 

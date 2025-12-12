@@ -15,7 +15,6 @@ import LoadingSpinner from './components/ui/LoadingSpinner';
 import ErrorFallback from './components/ui/ErrorFallback';
 
 // Pages
-import Home from './pages/Home';
 import JobListings from './pages/JobListings';
 import JobDetails from './pages/JobDetails';
 import CompanyProfile from './pages/CompanyProfile';
@@ -105,7 +104,7 @@ const NotFound = () => (
     <div className="text-center">
       <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
       <p className="text-gray-600 mb-4">Page not found</p>
-      <a href="/" className="text-blue-600 hover:text-blue-700">Go back home</a>
+      <a href="/" className="text-blue-600 hover:text-blue-700">Go to Jobs</a>
     </div>
   </div>
 );
@@ -117,7 +116,7 @@ function AppContent() {
       <main className="min-h-screen">
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Navigate to="/jobs" replace />} />
           <Route path="/jobs" element={<JobListings />} />
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/companies" element={<Companies />} />
