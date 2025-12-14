@@ -101,7 +101,7 @@ class GameEngine {
     this.gameInterval = setInterval(() => {
       const elapsed = (Date.now() - this.startTime) / 1000; // seconds
 
-      this.multiplier = Math.exp(0.06 * elapsed);
+      this.multiplier = Math.exp(0.03 * elapsed);
 
       // Check for auto cashout (fire and forget)
       Bet.find({
@@ -249,11 +249,6 @@ class GameEngine {
 
     if (!this.isRunning) {
       throw new Error('Game is not running');
-    }
-
-    // Don't allow cashout if multiplier is too low
-    if (this.multiplier < 1.1) {
-      throw new Error('Cannot cashout below 1.1x');
     }
 
     const payout = bet.amount * this.multiplier;

@@ -150,8 +150,8 @@ const AviatorGame = () => {
 
   const updatePlanePosition = (multiplier) => {
     const progress = multiplier - 1;
-    const x = progress * 100; // Move right based on multiplier
-    const y = progress * 100; // Move down
+    const x = progress * 50; // Move right based on multiplier
+    const y = progress * 50; // Move down
     const scale = 1 + progress * 0.02; // Scale slowly
     setPlanePosition({ x, y, scale });
   };
