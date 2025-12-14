@@ -180,6 +180,20 @@ const userSchema = new mongoose.Schema({
       prioritySupport: { type: Boolean, default: false }
     }
   },
+  bettingProfile: {
+    balance: { type: Number, default: 0 },
+    totalBets: { type: Number, default: 0 },
+    totalWinnings: { type: Number, default: 0 },
+    level: { type: Number, default: 1 },
+    isBettingEnabled: { type: Boolean, default: true },
+    kycVerified: { type: Boolean, default: false },
+    depositLimit: { type: Number, default: 1000 },
+    lossLimit: { type: Number, default: 500 },
+    sessionTimeLimit: { type: Number, default: 3600 }, // seconds
+    lastDeposit: { type: Date },
+    lastBet: { type: Date },
+    sessionStart: { type: Date }
+  },
   isVerified: { type: Boolean, default: false },
   isActive: { type: Boolean, default: true },
   lastLogin: Date,

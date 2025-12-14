@@ -1,3 +1,5 @@
+console.log('🚀 Starting server...');
+
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -144,6 +146,7 @@ app.get('/favicon.ico', (req, res) => {
 
 // Database Connection
 const connectDB = async () => {
+  console.log('🔄 Connecting to database...');
   try {
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tj-job-portal');
 
@@ -162,6 +165,17 @@ const connectDB = async () => {
     // Initialize monthly usage reset scheduler
     const { scheduleMonthlyReset } = await import('./utils/resetUsage.js');
     scheduleMonthlyReset();
+
+    // Initialize game engine
+    console.log('🎮 Initializing game engine...');
+    const gameEngine = (await import('./services/gameEngine.js')).default;
+    console.log('🎮 Game engine imported');
+    await gameEngine.startNewRound();
+    console.log('🎮 Game engine round started');
+
+    // Start flying immediately
+    await gameEngine.startFlying();
+    console.log('🎮 Game flying started');
   } catch (error) {
     console.error('❌ MongoDB connection error:', error);
     process.exit(1);
@@ -183,12 +197,26 @@ if (process.env.VERCEL !== '1') {
       socket.to(data.receiverId).emit('receive-message', data);
     });
 
+    // Betting socket events
+    socket.on('join-betting', (userId) => {
+      socket.join('betting-room');
+      socket.join(`user-${userId}`);
+      console.log(`User ${userId} joined betting room`);
+    });
+
+    socket.on('leave-betting', (userId) => {
+      socket.leave('betting-room');
+      socket.leave(`user-${userId}`);
+      console.log(`User ${userId} left betting room`);
+    });
+
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);
     });
   });
 
-  // Store io instance for use in routes
+  // Store io instance globally for game engine
+  global.io = io;
   app.set('io', io);
 } else {
   console.log('Socket.IO disabled for Vercel deployment');
@@ -215,6 +243,8 @@ app.use('/api/feedback', (await import('./routes/feedback.js')).default);
 app.use('/api/admin', (await import('./routes/admin.js')).default);
 app.use('/api/cv-revamp', (await import('./routes/cv-revamp.js')).default);
 app.use('/api/ai', (await import('./routes/ai.js')).default);
+app.use('/api/betting', (await import('./routes/betting.js')).default);
+app.use('/api/wallet', (await import('./routes/wallet.js')).default);
 
 // Simple demo routes for testing
 app.get('/api/health', (req, res) => {

@@ -42,6 +42,10 @@ import Terms from './pages/Terms';
 import AdminDashboard from './pages/AdminDashboard';
 import CvRevamp from './pages/CvRevamp';
 import JobSeekerDashboard from './pages/JobSeekerDashboard';
+import BettingDashboard from './pages/BettingDashboard';
+import BettingHistory from './pages/BettingHistory';
+import Wallet from './pages/Wallet';
+import AviatorGame from './components/betting/AviatorGame';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -230,6 +234,40 @@ function AppContent() {
               <AdminRoute>
                 <AdminDashboard />
               </AdminRoute>
+            }
+          />
+
+          {/* Betting Routes */}
+          <Route
+            path="/betting"
+            element={
+              <ProtectedRoute>
+                <BettingDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/betting/aviator"
+            element={
+              <ProtectedRoute>
+                <AviatorGame />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/betting/wallet"
+            element={
+              <ProtectedRoute>
+                <Wallet />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/betting/history"
+            element={
+              <ProtectedRoute>
+                <BettingHistory />
+              </ProtectedRoute>
             }
           />
 

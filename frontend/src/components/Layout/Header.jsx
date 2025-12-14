@@ -34,9 +34,14 @@ const Header = () => {
               CV Revamp
             </Link>
             {isAuthenticated && (
-              <Link to="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors text-sm lg:text-base" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                Dashboard
-              </Link>
+              <>
+                <Link to="/betting" className="text-gray-600 hover:text-blue-600 transition-colors text-sm lg:text-base" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                  🎮 Betting
+                </Link>
+                <Link to="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors text-sm lg:text-base" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                  Dashboard
+                </Link>
+              </>
             )}
           </nav>
 
@@ -133,16 +138,28 @@ const Header = () => {
                 CV Revamp
               </Link>
               {isAuthenticated && (
-                <Link
-                  to="/dashboard"
-                  className="text-gray-600 hover:text-blue-600 transition-colors text-base"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                >
-                  Dashboard
-                </Link>
+                <>
+                  <Link
+                    to="/betting"
+                    className="text-gray-600 hover:text-blue-600 transition-colors text-base"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                  >
+                    🎮 Betting
+                  </Link>
+                  <Link
+                    to="/dashboard"
+                    className="text-gray-600 hover:text-blue-600 transition-colors text-base"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                  >
+                    Dashboard
+                  </Link>
+                </>
               )}
             </nav>
             <div className="flex flex-col space-y-4 mt-6 pt-4 border-t">

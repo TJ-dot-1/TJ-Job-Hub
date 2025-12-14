@@ -83,6 +83,10 @@ router.post('/register', registerValidation, async (req, res) => {
         experience: [],
         education: []
       },
+      bettingProfile: {
+        balance: 100, // Give new users 100 KSH to start betting
+        kycVerified: true // Allow betting for new users
+      },
       isVerified: true,
       isActive: true,
       lastLogin: new Date()
