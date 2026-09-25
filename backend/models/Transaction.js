@@ -11,6 +11,14 @@ const transactionSchema = new mongoose.Schema({
     enum: ['deposit', 'withdrawal', 'bet', 'payout', 'bonus'],
     required: true
   },
+  gameRound: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'GameRound'
+  },
+  bet: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Bet'
+  },
   amount: {
     type: Number,
     required: true

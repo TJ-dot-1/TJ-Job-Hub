@@ -44,6 +44,21 @@ const AviatorGame = () => {
       });
 
       // Game events
+      socketRef.current.on('game:new_round', (data) => {
+        setGameState(prev => ({
+          ...prev,
+          roundId: data.roundId,
+          status: 'waiting',
+          multiplier: 1.0,
+          totalBets: 0,
+          totalPool: 0
+        }));
+        setActiveBets([]); // Clear active bets for new round
+        setIsFlying(false);
+        setIsCrashed(false);
+        setCountdown(5); // Show countdown before flight
+      });
+
       socketRef.current.on('game:start', (data) => {
         setGameState(prev => ({
           ...prev,
@@ -74,7 +89,6 @@ const AviatorGame = () => {
         }));
         setIsFlying(false);
         setIsCrashed(true);
-        setCountdown(5); // Start countdown for flying
         updatePlanePosition(data.crashPoint);
       });
 

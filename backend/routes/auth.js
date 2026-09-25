@@ -167,7 +167,7 @@ router.post('/login', loginValidation, async (req, res) => {
     }
 
     // Validate role if provided and not empty
-    if (role && role.trim() !== '' && user.role !== role) {
+    if (role && typeof role === 'string' && role.trim() !== '' && user.role !== role) {
       return res.status(400).json({
         success: false,
         message: `This email is registered as a ${user.role}, not ${role}`
@@ -184,6 +184,9 @@ router.post('/login', loginValidation, async (req, res) => {
 
     // Update last login
     user.lastLogin = new Date();
+    if (!user.stats) {
+      user.stats = {};
+    }
     user.stats.lastLogin = new Date();
     await user.save();
 

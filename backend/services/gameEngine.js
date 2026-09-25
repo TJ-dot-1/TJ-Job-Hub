@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import GameRound from '../models/GameRound.js';
 import Bet from '../models/Bet.js';
 import User from '../models/User.js';
+import Transaction from '../models/Transaction.js';
 import { getCrashPoint, getCrashTime, generateServerSeed } from '../utils/crashMath.js';
 
 class GameEngine {
@@ -9,25 +10,21 @@ class GameEngine {
     this.currentRound = null;
     this.gameInterval = null;
     this.multiplier = 1.0;
-    this.isRunning = false;
-    this.crashTime = 0;
+    this.isRunning = false; // Is flying
     this.isCrashing = false;
+    this.crashTime = 0;
+    this.startTime = 0;
+    
+    // In-memory active bets for fast O(1) auto-cashout processing
+    this.activeBets = new Map();
   }
 
-  // Generate a random server seed
-  generateServerSeed() {
-    return crypto.randomBytes(32).toString('hex');
-  }
-
-  // Generate hash for provably fair
   generateHash(serverSeed, clientSeed = '', nonce = 0) {
     return crypto.createHash('sha256')
       .update(serverSeed + clientSeed + nonce)
       .digest('hex');
   }
 
-
-  // Start a new game round
   async startNewRound() {
     if (this.isRunning) return;
 
@@ -52,10 +49,11 @@ class GameEngine {
     this.currentRound = gameRound;
     this.multiplier = 1.0;
     this.isRunning = false;
+    this.isCrashing = false;
+    this.activeBets.clear();
 
     console.log(`New round started: ${roundId} with crash at ${crashPoint}x`);
 
-    // Emit new round event
     if (global.io) {
       global.io.to('betting-room').emit('game:new_round', {
         roundId,
@@ -63,10 +61,8 @@ class GameEngine {
       });
     }
 
-    // Auto-start flying after 5 seconds for betting
     setTimeout(() => {
       if (this.currentRound && this.currentRound.roundId === roundId) {
-        console.log(`Starting flying phase for round ${roundId}`);
         this.startFlying();
       }
     }, 5000);
@@ -74,13 +70,11 @@ class GameEngine {
     return gameRound;
   }
 
-  // Start the flying phase
   async startFlying() {
-    if (!this.currentRound || this.isRunning) return;
+    if (!this.currentRound || this.isRunning || this.currentRound.status !== 'waiting') return;
 
     this.currentRound.status = 'flying';
     this.currentRound.startTime = new Date();
-
     await this.currentRound.save();
 
     this.isRunning = true;
@@ -88,37 +82,27 @@ class GameEngine {
     this.startTime = Date.now();
     this.crashTime = getCrashTime(this.currentRound.crashPoint);
 
-    console.log(`Round ${this.currentRound.roundId} flying with crash at ${this.currentRound.crashPoint}x in ${this.crashTime}s`);
-
-    // Emit game start event
     if (global.io) {
       global.io.to('betting-room').emit('game:start', {
         roundId: this.currentRound.roundId
       });
     }
 
-    // Start multiplier updates
     this.gameInterval = setInterval(() => {
-      const elapsed = (Date.now() - this.startTime) / 1000; // seconds
+      const elapsed = (Date.now() - this.startTime) / 1000;
+      
+      // Fixed growth rate to match getCrashTime (0.06)
+      this.multiplier = Math.exp(0.06 * elapsed);
 
-      this.multiplier = Math.exp(0.03 * elapsed);
-
-      // Check for auto cashout (fire and forget)
-      Bet.find({
-        gameRound: this.currentRound._id,
-        status: 'active',
-        cashOutMultiplier: { $lte: this.multiplier }
-      }).populate('user').then(autoCashoutBets => {
-        for (const bet of autoCashoutBets) {
-          this.cashOut(bet._id, bet.user._id).catch(error => {
-            console.error(`Auto cashout failed for bet ${bet._id}:`, error.message);
+      // Check auto cashout in memory
+      for (const [betIdStr, betData] of this.activeBets.entries()) {
+        if (betData.autoCashout && betData.autoCashout <= this.multiplier) {
+          this.cashOut(betData.betId, betData.userId).catch(error => {
+            console.error(`Auto cashout failed for bet ${betData.betId}:`, error.message);
           });
         }
-      }).catch(error => {
-        console.error('Error finding auto cashout bets:', error);
-      });
+      }
 
-      // Emit multiplier update
       if (global.io) {
         global.io.to('betting-room').emit('multiplier:update', {
           roundId: this.currentRound.roundId,
@@ -126,7 +110,6 @@ class GameEngine {
         });
       }
 
-      // Check for crash
       if (elapsed >= this.crashTime) {
         this.multiplier = this.currentRound.crashPoint;
         this.crashGame();
@@ -134,10 +117,8 @@ class GameEngine {
     }, 100);
   }
 
-  // Crash the game
   async crashGame() {
     if (!this.isRunning || this.isCrashing) return;
-
     this.isCrashing = true;
     clearInterval(this.gameInterval);
 
@@ -148,14 +129,13 @@ class GameEngine {
     console.log(`Round ${this.currentRound.roundId} crashed at ${this.multiplier.toFixed(2)}x`);
 
     this.isRunning = false;
+    this.activeBets.clear();
 
-    // Update remaining active bets to crashed
     await Bet.updateMany(
       { gameRound: this.currentRound._id, status: 'active' },
       { status: 'crashed' }
     );
 
-    // Emit crash event
     if (global.io) {
       global.io.to('betting-room').emit('game:crash', {
         roundId: this.currentRound.roundId,
@@ -163,45 +143,39 @@ class GameEngine {
       });
     }
 
-    // Start new round after delay
     setTimeout(() => {
       this.startNewRound();
-    }, 0);
-
+    }, 2000); // 2 second delay before next waiting state
+    
     this.isCrashing = false;
   }
 
-  // Place a bet
   async placeBet(userId, amount, autoCashout = null) {
-    if (!this.currentRound || (this.currentRound.status !== 'waiting' && this.currentRound.status !== 'flying')) {
-      throw new Error('Cannot place bet: no active round');
+    if (!this.currentRound || this.currentRound.status !== 'waiting') {
+      throw new Error('Cannot place bet: game already in progress');
     }
 
-    // Don't allow betting after multiplier reaches 2x if game is flying
-    if (this.currentRound.status === 'flying' && this.multiplier >= 2.0) {
-      throw new Error('Cannot place bet: game already in progress (multiplier > 2x)');
+    // Atomic deduction and lock
+    const user = await User.findOneAndUpdate(
+      { 
+        _id: userId, 
+        'bettingProfile.isBettingEnabled': true,
+        'bettingProfile.balance': { $gte: amount }
+      },
+      { 
+        $inc: { 
+          'bettingProfile.balance': -amount, 
+          'bettingProfile.totalBets': 1 
+        },
+        $set: { 'bettingProfile.lastBet': new Date() }
+      },
+      { new: true }
+    );
+
+    if (!user) {
+      throw new Error('Insufficient balance or betting disabled');
     }
 
-    const user = await User.findById(userId);
-    if (!user) throw new Error('User not found');
-
-    // Temporarily disabled for testing
-    // if (user.bettingProfile.balance < amount) {
-    //   throw new Error('Insufficient balance');
-    // }
-
-    // Check betting limits
-    if (!user.bettingProfile.isBettingEnabled) {
-      throw new Error('Betting is disabled for this account');
-    }
-
-    // Deduct from balance
-    user.bettingProfile.balance -= amount;
-    user.bettingProfile.totalBets += 1;
-    user.bettingProfile.lastBet = new Date();
-    await user.save();
-
-    // Create bet
     const bet = new Bet({
       user: userId,
       gameRound: this.currentRound._id,
@@ -212,23 +186,33 @@ class GameEngine {
     });
     await bet.save();
 
-    // Update round stats
+    const transaction = new Transaction({
+      user: userId,
+      type: 'bet',
+      amount,
+      gameRound: this.currentRound._id,
+      bet: bet._id,
+      status: 'completed',
+      transactionId: `bet_${bet._id}`
+    });
+    await transaction.save();
+
     this.currentRound.totalBets += 1;
     this.currentRound.totalPool += amount;
     await this.currentRound.save();
 
-    console.log(`Bet placed: ${amount} by ${user.name} on round ${this.currentRound.roundId}`);
+    this.activeBets.set(bet._id.toString(), {
+      userId: userId.toString(),
+      betId: bet._id.toString(),
+      autoCashout: autoCashout ? parseFloat(autoCashout) : null
+    });
 
-    // Emit bet placed event
     if (global.io) {
       global.io.to('betting-room').emit('bet:placed', {
         roundId: this.currentRound.roundId,
         betId: bet._id,
         amount,
-        user: {
-          id: user._id,
-          name: user.name
-        },
+        user: { id: user._id, name: user.name },
         autoCashout
       });
     }
@@ -236,62 +220,71 @@ class GameEngine {
     return bet;
   }
 
-  // Cash out a bet
   async cashOut(betId, userId) {
-    const bet = await Bet.findById(betId).populate('user');
-    if (!bet || bet.user._id.toString() !== userId) {
-      throw new Error('Bet not found or unauthorized');
-    }
-
-    if (bet.status !== 'active') {
-      throw new Error('Bet is not active');
-    }
-
     if (!this.isRunning) {
       throw new Error('Game is not running');
     }
 
-    const payout = bet.amount * this.multiplier;
-    bet.status = 'cashed_out';
-    bet.cashOutMultiplier = parseFloat(this.multiplier.toFixed(2));
-    bet.payout = payout;
-    bet.cashedOutAt = new Date();
+    const currentMult = parseFloat(this.multiplier.toFixed(2));
+
+    // Atomically find and mark as cashed out to prevent race conditions
+    const bet = await Bet.findOneAndUpdate(
+      { _id: betId, user: userId, status: 'active' },
+      { status: 'cashed_out', cashedOutAt: new Date() },
+      { new: true } // Returns the updated document
+    ).populate('user');
+
+    if (!bet) {
+      throw new Error('Bet not active, unauthorized, or already cashed out');
+    }
+    
+    // We update multiplier and payout after to use atomic lock above safely
+    const finalPayout = bet.amount * currentMult;
+    bet.cashOutMultiplier = currentMult;
+    bet.payout = finalPayout;
     await bet.save();
 
-    // Add to user balance
-    const user = bet.user;
-    user.bettingProfile.balance += payout;
-    user.bettingProfile.totalWinnings += payout - bet.amount;
-    user.bettingProfile.successfulCashouts += 1;
-    await user.save();
+    // Safely increment user balance
+    const user = await User.findByIdAndUpdate(userId, {
+      $inc: {
+        'bettingProfile.balance': finalPayout,
+        'bettingProfile.totalWinnings': finalPayout - bet.amount,
+        'bettingProfile.successfulCashouts': 1
+      }
+    }, { new: true });
 
-    console.log(`Cashout: ${payout.toFixed(2)} for bet ${betId}`);
+    const transaction = new Transaction({
+      user: userId,
+      type: 'payout',
+      amount: finalPayout,
+      gameRound: bet.gameRound,
+      bet: bet._id,
+      status: 'completed',
+      transactionId: `payout_${bet._id}`
+    });
+    await transaction.save();
 
-    // Emit cashout event
+    this.activeBets.delete(bet._id.toString());
+
     if (global.io) {
       global.io.to('betting-room').emit('bet:cashout', {
         betId,
-        payout: parseFloat(payout.toFixed(2)),
-        multiplier: parseFloat(this.multiplier.toFixed(2)),
-        user: {
-          id: user._id,
-          name: user.name
-        }
+        payout: parseFloat(finalPayout.toFixed(2)),
+        multiplier: currentMult,
+        user: { id: user._id, name: user.name }
       });
       
-      // Also send to specific user
       global.io.to(`user-${userId}`).emit('bet:personal_cashout', {
         betId,
-        payout: parseFloat(payout.toFixed(2)),
-        multiplier: parseFloat(this.multiplier.toFixed(2)),
-        profit: parseFloat((payout - bet.amount).toFixed(2))
+        payout: parseFloat(finalPayout.toFixed(2)),
+        multiplier: currentMult,
+        profit: parseFloat((finalPayout - bet.amount).toFixed(2))
       });
     }
 
     return bet;
   }
 
-  // Get current game state
   getCurrentState() {
     return {
       roundId: this.currentRound?.roundId,
@@ -302,7 +295,6 @@ class GameEngine {
     };
   }
 
-  // Verify a round's fairness
   async verifyRound(roundId, clientSeed) {
     const round = await GameRound.findOne({ roundId });
     if (!round) throw new Error('Round not found');
@@ -321,7 +313,6 @@ class GameEngine {
     };
   }
 
-  // Force crash for testing
   async forceCrash() {
     if (this.isRunning && this.currentRound) {
       this.currentRound.crashPoint = parseFloat(this.multiplier.toFixed(2));
@@ -331,7 +322,5 @@ class GameEngine {
   }
 }
 
-// Singleton instance
 const gameEngine = new GameEngine();
-
 export default gameEngine;
